@@ -80,35 +80,32 @@ CSimpleOpt::SOption g_rgOptions[] =
     SO_END_OF_OPTIONS
 };
 
+static const TCHAR * 
+GetLastErrorText(
+    int a_nError
+    ) 
+{
+    switch (a_nError) {
+    case SO_SUCCESS:            return _T("Success");
+    case SO_OPT_INVALID:        return _T("Unrecognized option");
+    case SO_OPT_MULTIPLE:       return _T("Option matched multiple strings");
+    case SO_ARG_INVALID:        return _T("Option does not accept argument");
+    case SO_ARG_INVALID_TYPE:   return _T("Invalid argument format");
+    case SO_ARG_MISSING:        return _T("Required argument is missing");
+    case SO_ARG_INVALID_DATA:   return _T("Invalid argument data");
+    default:                    return _T("Unknown error");
+    }
+}
+
 int _tmain(int argc, TCHAR * argv[]) {
     unsigned int uiFlags = 0;
 
     CSimpleOpt args(argc, argv, g_rgOptions, true);
     while (args.Next()) {
         if (args.LastError() != SO_SUCCESS) {
-            TCHAR * pszError = _T("Unknown error");
-            switch (args.LastError()) {
-            case SO_OPT_INVALID:
-                pszError = _T("Unrecognized option");
-                break;
-            case SO_OPT_MULTIPLE:
-                pszError = _T("Option matched multiple strings");
-                break;
-            case SO_ARG_INVALID:
-                pszError = _T("Option does not accept argument");
-                break;
-            case SO_ARG_INVALID_TYPE:
-                pszError = _T("Invalid argument format");
-                break;
-            case SO_ARG_MISSING:
-                pszError = _T("Required argument is missing");
-                break;
-            case SO_SUCCESS:
-                pszError = NULL;
-            }
             _tprintf(
                 _T("%s: '%s' (use --help to get command line help)\n"),
-                pszError, args.OptionText());
+                GetLastErrorText(args.LastError()), args.OptionText());
             continue;
         }
 

@@ -27,6 +27,11 @@
             <tr><td> -oARG           <td>short option with combined required argument
             <tr><td> -o[ARG]         <td>short option with combined optional argument
         </table>
+    -   supports options with multiple or variable numbers of arguments:
+        <table width="60%">
+            <tr><td width="30%"> --multi ARG1 ARG2      <td>Multiple arguments
+            <tr><td> --multi N ARG-1 ARG-2 ... ARG-N    <td>Variable number of arguments
+        </table>
     -   supports options which do not use a switch character. i.e. a special word
         which is construed as an option. e.g. "foo.exe open /directory/file.txt"
         supports clumping of multiple short options (no arguments) in a string, e.g.
@@ -98,7 +103,7 @@
                 handle option: use OptionId(), OptionText() and OptionArg()
             }
             else {
-                handle error: SO_OPT_INVALID, SO_OPT_MULTIPLE, SO_ARG_INVALID, SO_ARG_INVALID_TYPE, SO_ARG_MISSING
+                handle error: see ESOError enums
             }
         }
         </pre>
@@ -171,12 +176,18 @@
 //! Error values
 typedef enum _ESOError
 {
-    SO_SUCCESS          =  0,   //!< no error
-    SO_OPT_INVALID      = -1,   //!< valid option format but not registered in the option table
-    SO_OPT_MULTIPLE     = -2,   //!< multiple options matched the supplied option text
-    SO_ARG_INVALID      = -3,   //!< argument was supplied but is not valid for this option
-    SO_ARG_INVALID_TYPE = -4,   //!< argument was supplied in wrong format for this option
-    SO_ARG_MISSING      = -5    //!< required argument was not supplied
+    SO_SUCCESS          =  0,   //!< No error
+    SO_OPT_INVALID      = -1,   /*!< It looks like an option (it starts with a switch character),
+                                     but it isn't registered in the option table. */
+    SO_OPT_MULTIPLE     = -2,   /*!< Multiple options matched the supplied option text.
+                                     Only returned when NOT using SO_O_EXACT. */
+    SO_ARG_INVALID      = -3,   /*!< Option doesn't take an argument, but a combined argument
+                                     was supplied. */
+    SO_ARG_INVALID_TYPE = -4,   /*!< SO_REQ_CMB style-argument was supplied to a SO_REQ_SEP option
+                                     Only returned when using SO_O_PEDANTIC. */
+    SO_ARG_MISSING      = -5,   //!< Required argument was not supplied
+    SO_ARG_INVALID_DATA = -6,   /*!< Option argument looks like another option.
+                                     Only returned when NOT using SO_O_NOERR. */
 } ESOError;
 
 //! Option flags
@@ -195,6 +206,10 @@ enum _ESOFlags
                                  for missing arguments will still be generated. invalid
                                  options will be treated as files. invalid options in
                                  clumps will be silently ignored. */
+    SO_O_PEDANTIC = 0x0040  /*!< Validate argument type pedantically. Return an error when
+                                 a separated argument "-opt arg" is supplied by the user
+                                 as a combined argument "-opt=arg". By default this is
+                                 not considered an error. */
 };
 
 /*! Types of arguments that options may have. Note that some of the _ESOFlags are
@@ -203,10 +218,11 @@ enum _ESOFlags
     use only SO_NONE.
  */
 typedef enum _ESOArgType {
-    SO_NONE,    //!< No argument.                -o                 --opt
-    SO_REQ_SEP, //!< Required separate argument. -o ARG             --opt ARG
-    SO_REQ_CMB, //!< Required combined argument. -oARG    -o=ARG    --opt=ARG
-    SO_OPT      //!< Optional combined argument. -o[ARG]  -o[=ARG]  --opt[=ARG]
+    SO_NONE,    //!< No argument.                 -o                 --opt
+    SO_REQ_SEP, //!< Required separate argument.  -o ARG             --opt ARG
+    SO_REQ_CMB, //!< Required combined argument.  -oARG    -o=ARG    --opt=ARG
+    SO_OPT,     //!< Optional combined argument.  -o[ARG]  -o[=ARG]  --opt[=ARG]
+    SO_MULTI    //!< Multiple separate arguments. -o ARG1 ARG2 ... --opt ARG1 ARG2 ...
 } ESOArgType;
 
 //! this option definition must be the last entry in the table
@@ -268,6 +284,24 @@ public:
     */
     void Init(int a_argc, SOCHAR * a_argv[], const SOption * a_rgOptions, int a_nFlags = 0);
 
+    /*! @brief Change the current options table during option parsing.
+
+        @param a_rgOptions  Valid option array
+     */
+    inline void SetOptions(const SOption * a_rgOptions) { m_rgOptions = a_rgOptions; }
+
+    /*! @brief Change the current flags during option parsing.
+
+        Note that changing the SO_O_USEALL flag here will have no affect.
+        It must be set using Init() or the constructor.
+
+        @param a_nFlags     Flags to modify the processing of the arguments
+     */
+    inline void SetFlags(int a_nFlags) { m_nFlags = a_nFlags; }
+
+    /*! @brief Query if a particular flag is set */
+    inline bool HasFlag(int a_nFlag) const { return (m_nFlags & a_nFlag) == a_nFlag; }
+
     /*! @brief Advance to the next option if available.
 
         When all options have been processed it will return false. When true has been
@@ -310,6 +344,20 @@ public:
         This function is available only when Next() has returned true.
      */
     inline SOCHAR * OptionArg() const { return m_pszOptionArg; }
+
+    /*! @brief Validate and return the desired number of arguments.
+
+        This is only valid when OptionId() has return the ID of an option
+        that is registered as SO_MULTI. It may be called multiple times
+        each time returning the desired number of arguments. Previously
+        returned argument pointers are remain valid.
+
+        If an error occurs during processing, NULL will be returned and
+        the error will be available via LastError().
+
+        @param n    Number of arguments to return.
+     */
+    SOCHAR ** MultiArg(int n);
 
     /*! @brief Returned the number of entries in the Files() array.
 
@@ -397,12 +445,12 @@ CSimpleOptTempl<SOCHAR>::Next()
     if (m_pszClump && *m_pszClump) {
         // silently discard invalid clumped option
         bool bIsValid = NextClumped();
-        while (*m_pszClump && !bIsValid && (m_nFlags & SO_O_NOERR)) {
+        while (*m_pszClump && !bIsValid && HasFlag(SO_O_NOERR)) {
             bIsValid = NextClumped();
         }
 
         // return this option if valid or we are returning errors
-        if (bIsValid || (m_nFlags & SO_O_NOERR) == 0) {
+        if (bIsValid || !HasFlag(SO_O_NOERR)) {
             return true;
         }
     }
@@ -436,7 +484,7 @@ CSimpleOptTempl<SOCHAR>::Next()
         }
         nTableIdx = LookupOption(m_pszOptionText);
 
-        // if we didn't find this option and it is a short form
+        // if we didn't find this option but if it is a short form
         // option then we try the alternative forms
         if (nTableIdx < 0
             && !m_pszOptionArg
@@ -446,7 +494,7 @@ CSimpleOptTempl<SOCHAR>::Next()
             && m_pszOptionText[2])
         {
             // test for a short-form with argument if appropriate
-            if (m_nFlags & SO_O_SHORTARG) {
+            if (HasFlag(SO_O_SHORTARG)) {
                 m_szShort[1] = m_pszOptionText[1];
                 int nIdx = LookupOption(m_szShort);
                 if (nIdx >= 0
@@ -461,7 +509,7 @@ CSimpleOptTempl<SOCHAR>::Next()
 
             // test for a clumped short-form option string and we didn't
             // match on the short-form argument above
-            if (nTableIdx < 0 && m_nFlags & SO_O_CLUMP)  {
+            if (nTableIdx < 0 && HasFlag(SO_O_CLUMP))  {
                 m_pszClump = &m_pszOptionText[1];
                 ++m_nNextOption;
                 if (nOptIdx > m_nOptionIdx) {
@@ -475,9 +523,7 @@ CSimpleOptTempl<SOCHAR>::Next()
         // and we are not suppressing errors for invalid options then it
         // is reported as an error, otherwise it is data.
         if (nTableIdx < 0) {
-            if ((m_nFlags & SO_O_NOERR) == 0
-                && m_pszOptionText[0] == (SOCHAR)'-')
-            {
+            if (!HasFlag(SO_O_NOERR) && m_pszOptionText[0] == (SOCHAR)'-') {
                 break;
             }
             m_pszOptionText[0] = cFirst;
@@ -498,6 +544,7 @@ CSimpleOptTempl<SOCHAR>::Next()
     ++m_nNextOption;
 
     // get the option id
+    ESOArgType nArgType = SO_NONE;
     if (nTableIdx < 0) {
         m_nLastError = (ESOError) nTableIdx; // error code
     }
@@ -506,7 +553,7 @@ CSimpleOptTempl<SOCHAR>::Next()
         m_pszOptionText = m_rgOptions[nTableIdx].pszArg;
 
         // ensure that the arg type is valid
-        ESOArgType nArgType = m_rgOptions[nTableIdx].nArgType;
+        nArgType = m_rgOptions[nTableIdx].nArgType;
         switch (nArgType) {
         case SO_NONE:
             if (m_pszOptionArg) {
@@ -516,15 +563,13 @@ CSimpleOptTempl<SOCHAR>::Next()
 
         case SO_REQ_SEP:
             if (m_pszOptionArg) {
-                m_nLastError = SO_ARG_INVALID_TYPE;
+                // they wanted separate args, but we got a combined one, unless
+                // we are being pedantic about things, just accept it.
+                if (HasFlag(SO_O_PEDANTIC)) {
+                    m_nLastError = SO_ARG_INVALID_TYPE;
+                }
             }
-            else if (nOptIdx+1 >= m_argc) {
-                m_nLastError = SO_ARG_MISSING;
-            }
-            else {
-                m_pszOptionArg = m_argv[nOptIdx+1];
-                ++m_nNextOption;
-            }
+            // more processing after we shuffle
             break;
 
         case SO_REQ_CMB:
@@ -536,6 +581,11 @@ CSimpleOptTempl<SOCHAR>::Next()
         case SO_OPT:
             // nothing to do
             break;
+
+        case SO_MULTI:
+            // nothing to do. Caller must now check for valid arguments
+            // using GetMultiArg()
+            break;
         }
     }
 
@@ -543,6 +593,16 @@ CSimpleOptTempl<SOCHAR>::Next()
     if (nOptIdx > m_nOptionIdx) {
         ShuffleArg(m_nOptionIdx, nOptIdx - m_nOptionIdx);
     }
+
+    // we need to return the separate arg if required, just re-use the
+    // multi-arg code because it all does the same thing
+    if (nArgType == SO_REQ_SEP && !m_pszOptionArg && m_nLastError == SO_SUCCESS) {
+        SOCHAR ** ppArgs = MultiArg(1);
+        if (ppArgs) {
+            m_pszOptionArg = *ppArgs;
+        }
+    }
+
     return true;
 }
 
@@ -557,12 +617,12 @@ CSimpleOptTempl<SOCHAR>::PrepareArg(
     // option delimiter, but it cannot replace the '-' option used to
     // denote stdin. On Un*x paths may start with slash so it may not
     // be used to start an option.
-    if ((m_nFlags & SO_O_NOSLASH) == 0
+    if (!HasFlag(SO_O_NOSLASH)
         && a_pszString[0] == (SOCHAR)'/'
         && a_pszString[1]
         && a_pszString[1] != (SOCHAR)'-')
     {
-        a_pszString[0] = (SOCHAR) '-';
+        a_pszString[0] = (SOCHAR)'-';
         return (SOCHAR)'/';
     }
 #endif
@@ -670,7 +730,7 @@ CSimpleOptTempl<SOCHAR>::LookupOption(
     for (int n = 0; m_rgOptions[n].nId >= 0; ++n) {
         // the option table must use hyphens as the option character,
         // the slash character is converted to a hyphen for testing.
-        SO_ASSERT(m_rgOptions[n].pszArg[0] != (SOCHAR) '/');
+        SO_ASSERT(m_rgOptions[n].pszArg[0] != (SOCHAR)'/');
 
         int nMatchLen = CalcMatch(m_rgOptions[n].pszArg, a_pszOption);
         if (nMatchLen == -1) {
@@ -685,7 +745,7 @@ CSimpleOptTempl<SOCHAR>::LookupOption(
 
     // only partial matches or no match gets to here, ensure that we
     // don't return a partial match unless it is a clear winner
-    if ((m_nFlags & SO_O_EXACT) || nBestMatch == -1) {
+    if (HasFlag(SO_O_EXACT) || nBestMatch == -1) {
         return SO_OPT_INVALID;
     }
     return (nBestMatchLen > nLastMatchLen) ? nBestMatch : SO_OPT_MULTIPLE;
@@ -739,6 +799,43 @@ CSimpleOptTempl<SOCHAR>::CalcMatch(
     // partial match to the current length of the test string
     return nLen;
 }
+
+// calculate the number of characters that match (case-sensitive)
+// 0 = no match, > 0 == number of characters, -1 == perfect match
+template<class SOCHAR>
+SOCHAR **
+CSimpleOptTempl<SOCHAR>::MultiArg(
+    int a_nCount
+    )
+{
+    // ensure we have enough arguments
+    if (m_nNextOption + a_nCount > m_nLastArg) {
+        m_nLastError = SO_ARG_MISSING;
+        return NULL;
+    }
+
+    // our argument array
+    SOCHAR ** rgpszArg = &m_argv[m_nNextOption];
+
+    // Ensure that each of the following don't start with an switch character.
+    // Only make this check if we are returning errors for unknown arguments.
+    if (!HasFlag(SO_O_NOERR)) {
+        for (int n = 0; n < a_nCount; ++n) {
+            SOCHAR ch = PrepareArg(rgpszArg[n]);
+            if (rgpszArg[n][0] == (SOCHAR)'-') {
+                rgpszArg[n][0] = ch;
+                m_nLastError = SO_ARG_INVALID_DATA;
+                return NULL;
+            }
+            rgpszArg[n][0] = ch;
+        }
+    }
+
+    // all good
+    m_nNextOption += a_nCount;
+    return rgpszArg;
+}
+
 
 // ---------------------------------------------------------------------------
 //                                  TYPE DEFINITIONS
