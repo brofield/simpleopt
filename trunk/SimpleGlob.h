@@ -416,9 +416,9 @@ struct SimpleGlobBase
     }
 
 private:
-    struct glob_t m_glob;
-    size_t        m_uiCurr;
-    bool          m_bIsDir;
+    glob_t  m_glob;
+    size_t  m_uiCurr;
+    bool    m_bIsDir;
 };
 
 #endif // _WIN32
