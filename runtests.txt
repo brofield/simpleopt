@@ -172,3 +172,17 @@ Required argument is missing: '-sep' (use --help to get command line help)
 fullSample --noerr --multi 1 -sep 
 --multi: expecting 1 args
 MultiArg 0: -sep
+ 
+fullSample open file1 read file2 write file3 close file4 zip file5 unzip file6 
+option: 23, text: 'open'
+option: 24, text: 'read'
+option: 25, text: 'write'
+option: 26, text: 'close'
+option: 27, text: 'zip'
+option: 28, text: 'unzip'
+file  0: 'file1'
+file  1: 'file2'
+file  2: 'file3'
+file  3: 'file4'
+file  4: 'file5'
+file  5: 'file6'

@@ -1,43 +1,9 @@
 @echo off
+goto main
 
-set TESTDIR=
-set EXPECTED=
-set OUTPUT=
-
-if exist .\fullSample.exe (
-    set EXPECTED=..\runtests.txt
-    call :runtests .
-    exit /b 0
-)
-
-set EXPECTED=runtests.txt
-for %%d in (fullDebug fullDebugUnicode fullRelease fullReleaseUnicode) do call :runtests %%d
-pause
-exit /b 0
-
-:runtests
-set TESTDIR=%1
-
-if not exist %TESTDIR% (
-    echo Skipping %TESTDIR%
-    exit /b 0
-)
-if not exist %TESTDIR%\fullSample.exe (
-    echo Skipping %TESTDIR%
-    exit /b 0
-)
-
-set TESTNAME=%TESTDIR%
-set OUTPUT=runtests.%TESTNAME%
-
-if %TESTNAME%.==.. (
-    set TESTNAME=CurrentDir
-    set OUTPUT=runtests.out
-)
-
-if exist %OUTPUT% del %OUTPUT%
-
-
+REM -------------------------------------------------------
+REM procedure: run all test cases
+:alltestcase
 call :testcase -d -e -f -g -flag --flag
 call :testcase -s SEP1 -sep SEP2 --sep SEP3
 call :testcase -s -s SEP1 -sep SEP2 --sep SEP3
@@ -66,21 +32,77 @@ call :testcase /sep SEP1
 call :testcase --noslash /sep SEP1
 call :testcase --multi 1 -sep
 call :testcase --noerr --multi 1 -sep
-
-
-fc /A %OUTPUT% %EXPECTED% > nul
-if errorlevel 1 goto error
-echo %TESTNAME%: All tests passed!
+call :testcase open file1 read file2 write file3 close file4 zip file5 unzip file6
 exit /b 0
 
-:error
-echo %TESTNAME%: Test results (%OUTPUT%) don't match expected (%EXPECTED%)
-exit /b 1
-
+REM -------------------------------------------------------
+REM procedure: run a single test case 
 :testcase
 echo. >> %OUTPUT%
 echo fullSample %* >> %OUTPUT%
 %TESTDIR%\fullSample %* >> %OUTPUT%
 exit /b 0
 
+REM -------------------------------------------------------
+REM procedure: run all test cases for specific directory
+:runtests
+set TESTDIR=%1
 
+REM skip it there is no directory or exec to run
+if not exist %TESTDIR% (
+    echo Skipping %TESTDIR%
+    exit /b 0
+)
+if not exist %TESTDIR%\fullSample.exe (
+    echo Skipping %TESTDIR%
+    exit /b 0
+)
+
+set TESTNAME=%TESTDIR%
+set OUTPUT=runtests.%TESTNAME%.txt
+
+REM special case running tests for the current directory
+if %TESTNAME%.==.. (
+    set TESTNAME=CurrentDir
+    set OUTPUT=runtests.current.txt
+)
+
+REM get rid of any old test results
+if exist %OUTPUT% del %OUTPUT%
+
+REM run the actual test cases
+call :alltestcase
+
+REM check to see if we have our desired results
+fc /A %OUTPUT% %EXPECTED% > nul
+if errorlevel 1 (
+    echo %TESTNAME% : Test results dont match expected
+    echo. > runtests.error
+    exit /b 1
+)    
+echo %TESTNAME%: All tests passed!
+exit /b 0
+
+REM -------------------------------------------------------
+REM main program, exit on no error, pause on error
+:main
+set TESTDIR=
+set EXPECTED=
+set OUTPUT=
+
+REM this file flags if there was an error
+if exist runtests.error del runtests.error
+
+if exist .\fullSample.exe (
+    set EXPECTED=..\runtests.txt
+    call :runtests .
+) else (
+    set EXPECTED=runtests.txt
+    for %%d in (fullDebug fullDebugUnicode fullRelease fullReleaseUnicode) do call :runtests %%d
+)
+if exist runtests.error (
+    del runtests.error
+    pause
+    exit /b 1
+)    
+exit /b 0
