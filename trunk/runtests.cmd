@@ -33,6 +33,14 @@ call :testcase --noslash /sep SEP1
 call :testcase --multi 1 -sep
 call :testcase --noerr --multi 1 -sep
 call :testcase open file1 read file2 write file3 close file4 zip file5 unzip file6
+call :testcase upcase
+call :testcase UPCASE
+call :testcase --icase upcase
+call :testcase -E -F -S sep1 -SEP sep2 --SEP sep3
+call :testcase --icase -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
+call :testcase --icase-short -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
+call :testcase --icase-long  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
+call :testcase --icase-word  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 exit /b 0
 
 REM -------------------------------------------------------

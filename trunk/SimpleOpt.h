@@ -1,6 +1,6 @@
 /*! @file SimpleOpt.h
 
-    @version 2.8
+    @version 2.9
 
     @brief A cross-platform command line library which can parse almost any
     of the standard command line formats in use today. It is designed explicitly
@@ -32,6 +32,7 @@
             <tr><td width="30%"> --multi ARG1 ARG2      <td>Multiple arguments
             <tr><td> --multi N ARG-1 ARG-2 ... ARG-N    <td>Variable number of arguments
         </table>
+    -   supports case-insensitive option matching on short, long and/or word arguments.
     -   supports options which do not use a switch character. i.e. a special word
         which is construed as an option. e.g. "foo.exe open /directory/file.txt"
         supports clumping of multiple short options (no arguments) in a string, e.g.
@@ -120,6 +121,8 @@
 
     -   In MBCS mode, this library is guaranteed to work correctly only when all
         option names use only ASCII characters.
+    -   Note that if case-insensitive matching is being used then the first
+        matching option in the argument list will be returned.
 
     @section licence MIT LICENCE
 
@@ -193,23 +196,28 @@ typedef enum _ESOError
 //! Option flags
 enum _ESOFlags
 {
-    SO_O_EXACT    = 0x0001, /*!< Disallow partial matching of option names */
-    SO_O_NOSLASH  = 0x0002, /*!< Disallow use of slash as an option marker on Windows.
-                                 Un*x only ever recognizes a hyphen. */
-    SO_O_SHORTARG = 0x0004, /*!< Permit arguments on single letter options with
-                                 no equals sign. e.g. -oARG or -o[ARG] */
-    SO_O_CLUMP    = 0x0008, /*!< Permit single character options to be clumped into
-                                 a single option string. e.g. "-a -b -c" <==> "-abc" */
-    SO_O_USEALL   = 0x0010, /*!< Process the entire argv array for options, including
-                                 the argv[0] entry. */
-    SO_O_NOERR    = 0x0020, /*!< Do not generate an error for invalid options. errors
-                                 for missing arguments will still be generated. invalid
-                                 options will be treated as files. invalid options in
-                                 clumps will be silently ignored. */
-    SO_O_PEDANTIC = 0x0040  /*!< Validate argument type pedantically. Return an error when
-                                 a separated argument "-opt arg" is supplied by the user
-                                 as a combined argument "-opt=arg". By default this is
-                                 not considered an error. */
+    SO_O_EXACT       = 0x0001, /*!< Disallow partial matching of option names */
+    SO_O_NOSLASH     = 0x0002, /*!< Disallow use of slash as an option marker on Windows.
+                                    Un*x only ever recognizes a hyphen. */
+    SO_O_SHORTARG    = 0x0004, /*!< Permit arguments on single letter options with
+                                    no equals sign. e.g. -oARG or -o[ARG] */
+    SO_O_CLUMP       = 0x0008, /*!< Permit single character options to be clumped into
+                                    a single option string. e.g. "-a -b -c" <==> "-abc" */
+    SO_O_USEALL      = 0x0010, /*!< Process the entire argv array for options, including
+                                    the argv[0] entry. */
+    SO_O_NOERR       = 0x0020, /*!< Do not generate an error for invalid options. errors
+                                    for missing arguments will still be generated. invalid
+                                    options will be treated as files. invalid options in
+                                    clumps will be silently ignored. */
+    SO_O_PEDANTIC    = 0x0040, /*!< Validate argument type pedantically. Return an error when
+                                    a separated argument "-opt arg" is supplied by the user
+                                    as a combined argument "-opt=arg". By default this is
+                                    not considered an error. */
+    SO_O_ICASE_SHORT = 0x0100, /*!< Case-insensitive comparisons for short arguments */
+    SO_O_ICASE_LONG  = 0x0200, /*!< Case-insensitive comparisons for long arguments */
+    SO_O_ICASE_WORD  = 0x0400, /*!< Case-insensitive comparisons for word arguments 
+                                    i.e. arguments without any hyphens at the start. */
+    SO_O_ICASE       = 0x0700  /*!< Case-insensitive comparisons for all arg types */
 };
 
 /*! Types of arguments that options may have. Note that some of the _ESOFlags are
@@ -391,6 +399,7 @@ private:
         while (*s && *s != (SOCHAR)'=') ++s;
         return *s ? s : NULL;
     }
+    bool IsEqual(SOCHAR a_cLeft, SOCHAR a_cRight, int a_nArgType) const;
 
 private:
     const SOption * m_rgOptions;     // pointer to options table as passed in to soInit()
@@ -764,9 +773,19 @@ CSimpleOptTempl<SOCHAR>::CalcMatch(
         return 0;
     }
 
+    // determine the argument type
+    int nArgType = SO_O_ICASE_LONG;
+    if (a_pszSource[0] != '-') {
+        nArgType = SO_O_ICASE_WORD;
+    }
+    else if (a_pszSource[1] != '-' && !a_pszSource[2]) {
+        nArgType = SO_O_ICASE_SHORT;
+    }
+
     // match and skip leading hyphens
     while (*a_pszSource == (SOCHAR)'-' && *a_pszSource == *a_pszTest) {
-        ++a_pszSource; ++a_pszTest;
+        ++a_pszSource; 
+        ++a_pszTest;
     }
     if (*a_pszSource == (SOCHAR)'-' || *a_pszTest == (SOCHAR)'-') {
         return 0;
@@ -774,8 +793,10 @@ CSimpleOptTempl<SOCHAR>::CalcMatch(
 
     // find matching number of characters in the strings
     int nLen = 0;
-    while (*a_pszSource && *a_pszSource == *a_pszTest) {
-        ++a_pszSource; ++a_pszTest; ++nLen;
+    while (*a_pszSource && IsEqual(*a_pszSource, *a_pszTest, nArgType)) {
+        ++a_pszSource; 
+        ++a_pszTest; 
+        ++nLen;
     }
 
     // if we have exhausted the source...
@@ -798,6 +819,22 @@ CSimpleOptTempl<SOCHAR>::CalcMatch(
 
     // partial match to the current length of the test string
     return nLen;
+}
+
+template<class SOCHAR>
+bool
+CSimpleOptTempl<SOCHAR>::IsEqual(
+    SOCHAR  a_cLeft,
+    SOCHAR  a_cRight,
+    int     a_nArgType
+    ) const
+{
+    // if this matches then we are doing case-insensitive matching
+    if (m_nFlags & a_nArgType) {
+        if (a_cLeft  >= 'A' && a_cLeft  <= 'Z') a_cLeft  += 'a' - 'A';
+        if (a_cRight >= 'A' && a_cRight <= 'Z') a_cRight += 'a' - 'A';
+    }
+    return a_cLeft == a_cRight;
 }
 
 // calculate the number of characters that match (case-sensitive)
