@@ -48,22 +48,27 @@ static void ShowUsage()
     _tprintf(
         _T("Usage: fullSample [OPTIONS] [FILES]\n")
         _T("\n")
-        _T("--exact     Disallow partial matching of option names\n")
-        _T("--noslash   Disallow use of slash as an option marker on Windows\n")
-        _T("--shortarg  Permit arguments on single letter options with no equals sign\n")
-        _T("--clump     Permit single char options to be clumped as long string\n")
-        _T("--noerr     Do not generate any errors for invalid options\n")
-        _T("--pedantic  Generate an error for petty things\n")
+        _T("--exact         Disallow partial matching of option names\n")
+        _T("--noslash       Disallow use of slash as an option marker on Windows\n")
+        _T("--shortarg      Permit arguments on single letter options with no equals sign\n")
+        _T("--clump         Permit single char options to be clumped as long string\n")
+        _T("--noerr         Do not generate any errors for invalid options\n")
+        _T("--pedantic      Generate an error for petty things\n")
+        _T("--icase         Case-insensitive for all types\n")
+        _T("--icase-short   Case-insensitive for short args\n")
+        _T("--icase-long    Case-insensitive for long argsn")
+        _T("--icase-word    Case-insensitive for word args\n")
         _T("\n")
-        _T("-d  -e  -f  -g  -flag  --flag               Flag (no arg)\n")
+        _T("-d  -e  -E  -f  -F  -g  -flag  --flag       Flag (no arg)\n")
         _T("-s ARG   -sep ARG  --sep ARG                Separate required arg\n")
+        _T("-S ARG   -SEP ARG  --SEP ARG                Separate required arg (uppercase)\n")
         _T("-cARG    -c=ARG    -com=ARG    --com=ARG    Combined required arg\n")
         _T("-o[ARG]  -o[=ARG]  -opt[=ARG]  --opt[=ARG]  Combined optional arg\n")
         _T("-man     -mandy    -mandate                 Shortcut matching tests\n")
         _T("--man    --mandy   --mandate                Shortcut matching tests\n")
         _T("--multi0 --multi1 ARG --multi2 ARG1 ARG2    Multiple argument tests\n")
         _T("--multi N ARG-1 ARG-2 ... ARG-N             Multiple argument tests\n")
-        _T("open read write close zip unzip             Special words\n")
+        _T("open read write close zip unzip UPCASE      Special words\n")
         _T("\n")
         _T("-?  -h  -help  --help                       Output this help.\n")
         _T("\n")
@@ -73,12 +78,16 @@ static void ShowUsage()
 
 CSimpleOpt::SOption g_rgFlags[] =
 {
-    { SO_O_EXACT,    _T("--exact"),     SO_NONE },
-    { SO_O_NOSLASH,  _T("--noslash"),   SO_NONE },
-    { SO_O_SHORTARG, _T("--shortarg"),  SO_NONE },
-    { SO_O_CLUMP,    _T("--clump"),     SO_NONE },
-    { SO_O_NOERR,    _T("--noerr"),     SO_NONE },
-    { SO_O_PEDANTIC, _T("--pedantic"),  SO_NONE },
+    { SO_O_EXACT,       _T("--exact"),          SO_NONE },
+    { SO_O_NOSLASH,     _T("--noslash"),        SO_NONE },
+    { SO_O_SHORTARG,    _T("--shortarg"),       SO_NONE },
+    { SO_O_CLUMP,       _T("--clump"),          SO_NONE },
+    { SO_O_NOERR,       _T("--noerr"),          SO_NONE },
+    { SO_O_PEDANTIC,    _T("--pedantic"),       SO_NONE },
+    { SO_O_ICASE,       _T("--icase"),          SO_NONE },
+    { SO_O_ICASE_SHORT, _T("--icase-short"),    SO_NONE },
+    { SO_O_ICASE_LONG,  _T("--icase-long"),     SO_NONE },
+    { SO_O_ICASE_WORD,  _T("--icase-word"),     SO_NONE },
     SO_END_OF_OPTIONS
 };
 
@@ -117,6 +126,12 @@ CSimpleOpt::SOption g_rgOptions[] =
     { 26,         _T("close"),        SO_NONE    },
     { 27,         _T("zip"),          SO_NONE    },
     { 28,         _T("unzip"),        SO_NONE    },
+    { 29,         _T("-E"),           SO_NONE    },
+    { 30,         _T("-F"),           SO_NONE    },
+    { 31,         _T("-S"),           SO_REQ_SEP },
+    { 32,         _T("-SEP"),         SO_REQ_SEP },
+    { 33,         _T("--SEP"),        SO_REQ_SEP },
+    { 34,         _T("UPCASE"),       SO_NONE    },
     { OPT_MULTI,  _T("--multi"),      SO_MULTI   },
     { OPT_MULTI0, _T("--multi0"),     SO_MULTI   },
     { OPT_MULTI1, _T("--multi1"),     SO_MULTI   },

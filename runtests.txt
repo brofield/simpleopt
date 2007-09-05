@@ -186,3 +186,51 @@ file  2: 'file3'
 file  3: 'file4'
 file  4: 'file5'
 file  5: 'file6'
+ 
+fullSample upcase 
+file  0: 'upcase'
+ 
+fullSample UPCASE 
+option: 34, text: 'UPCASE'
+ 
+fullSample --icase upcase 
+option: 34, text: 'UPCASE'
+ 
+fullSample -E -F -S sep1 -SEP sep2 --SEP sep3 
+option: 29, text: '-E'
+option: 30, text: '-F'
+option: 31, text: '-S', arg: 'sep1'
+option: 32, text: '-SEP', arg: 'sep2'
+option: 33, text: '--SEP', arg: 'sep3'
+ 
+fullSample --icase -E -F -S sep1 -SEP sep2 --SEP sep3 upcase 
+option:  3, text: '-e'
+option:  4, text: '-f'
+option:  8, text: '-s', arg: 'sep1'
+option:  9, text: '-sep', arg: 'sep2'
+option: 10, text: '--sep', arg: 'sep3'
+option: 34, text: 'UPCASE'
+ 
+fullSample --icase-short -E -F -S sep1 -SEP sep2 --SEP sep3 upcase 
+option:  3, text: '-e'
+option:  4, text: '-f'
+option:  8, text: '-s', arg: 'sep1'
+option: 32, text: '-SEP', arg: 'sep2'
+option: 33, text: '--SEP', arg: 'sep3'
+file  0: 'upcase'
+ 
+fullSample --icase-long  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase 
+option: 29, text: '-E'
+option: 30, text: '-F'
+option: 31, text: '-S', arg: 'sep1'
+option:  9, text: '-sep', arg: 'sep2'
+option: 10, text: '--sep', arg: 'sep3'
+file  0: 'upcase'
+ 
+fullSample --icase-word  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase 
+option: 29, text: '-E'
+option: 30, text: '-F'
+option: 31, text: '-S', arg: 'sep1'
+option: 32, text: '-SEP', arg: 'sep2'
+option: 33, text: '--SEP', arg: 'sep3'
+option: 34, text: 'UPCASE'
