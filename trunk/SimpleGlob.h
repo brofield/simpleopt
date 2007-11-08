@@ -3,22 +3,24 @@
     @version 2.8
 
     @brief A cross-platform file globbing library providing the ability to
-    expand wildcards in command-line arguments to a list of all matching files.
-    It is designed explicitly to be portable to any platform and has been tested on
-    Windows and Linux. See CSimpleGlobTempl for the class definition.
+    expand wildcards in command-line arguments to a list of all matching 
+    files. It is designed explicitly to be portable to any platform and has 
+    been tested on Windows and Linux. See CSimpleGlobTempl for the class 
+    definition.
 
     @section features FEATURES
 
-    -   MIT Licence allows free use in all software (including GPL and commercial)
+    -   MIT Licence allows free use in all software (including GPL and 
+        commercial)
     -   multi-platform (Windows 95/98/ME/NT/2K/XP, Linux, Unix)
     -   supports most of the standard linux glob() options
-    -   recognition of a forward paths as equivalent to a backward slash on Windows.
-        e.g. "c:/path/foo*" is equivalent to "c:\path\foo*".
+    -   recognition of a forward paths as equivalent to a backward slash 
+        on Windows. e.g. "c:/path/foo*" is equivalent to "c:\path\foo*".
     -   implemented with only a single C++ header file
     -   char, wchar_t and Windows TCHAR in the same program
     -   complete working examples included
-    -   compiles cleanly at warning level 4 (Windows/VC.NET 2003), warning level
-        3 (Windows/VC6) and -Wall (Linux/gcc)
+    -   compiles cleanly at warning level 4 (Windows/VC.NET 2003), 
+        warning level 3 (Windows/VC6) and -Wall (Linux/gcc)
 
     @section usage USAGE
 
@@ -61,29 +63,30 @@
 
     Copyright (c) 2006-2007, Brodie Thiesfield
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is furnished
-    to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #ifndef INCLUDED_SimpleGlob
 #define INCLUDED_SimpleGlob
 
-/*! @brief The operation of SimpleGlob is fine-tuned via the use of a combination
-    of the following flags.
+/*! @brief The operation of SimpleGlob is fine-tuned via the use of a 
+    combination of the following flags.
 
     The flags may be passed at initialization of the class and used for every
     filespec added, or alternatively they may optionally be specified in the
@@ -98,14 +101,16 @@
 
     @param SG_GLOB_NOSORT
         By default, files are returned in sorted into string order. With this
-        flag, no sorting is done. This is not compatible with SG_GLOB_FULLSORT.
+        flag, no sorting is done. This is not compatible with 
+        SG_GLOB_FULLSORT.
 
     @param SG_GLOB_FULLSORT
         By default, files are sorted in groups belonging to each filespec that
-        was added. For example if the filespec "b*" was added before the filespec
-        "a*" then the argv array will contain all b* files sorted in order,
-        followed by all a* files sorted in order. If this flag is specified, the
-        entire array will be sorted ignoring the filespec groups.
+        was added. For example if the filespec "b*" was added before the 
+        filespec "a*" then the argv array will contain all b* files sorted in 
+        order, followed by all a* files sorted in order. If this flag is 
+        specified, the entire array will be sorted ignoring the filespec 
+        groups.
 
     @param SG_GLOB_NOCHECK
         If the pattern doesn't match anything, return the original pattern.
@@ -114,7 +119,8 @@
         Tilde expansion is carried out (on Unix platforms)
 
     @param SG_GLOB_ONLYDIR
-        Return only directories which match (not compatible with SG_GLOB_ONLYFILE)
+        Return only directories which match (not compatible with 
+        SG_GLOB_ONLYFILE)
 
     @param SG_GLOB_ONLYFILE
         Return only files which match (not compatible with SG_GLOB_ONLYDIR)
@@ -142,7 +148,7 @@ enum SG_Error {
     SG_ERR_FAILURE      = -2
 };
 
-// ----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // Platform dependent implementations
 
 // don't include this in documentation as it isn't relevant
@@ -469,8 +475,8 @@ public:
         @param a_pszFileSpec    Filespec to add to the glob.
 
         @return SG_SUCCESS      Matching files were added to the glob.
-        @return SG_ERR_NOMATCH  Nothing matched the pattern. To ignore this error
-                                compare the return value to >= SG_SUCCESS.
+        @return SG_ERR_NOMATCH  Nothing matched the pattern. To ignore this 
+                                error compare return value to >= SG_SUCCESS.
         @return SG_ERR_MEMORY   Out of memory failure.
         @return SG_ERR_FAILURE  General failure.
      */
@@ -485,8 +491,8 @@ public:
         @param a_rgpszFileSpec  Array of filespec to add to the glob.
 
         @return SG_SUCCESS      Matching files were added to the glob.
-        @return SG_ERR_NOMATCH  Nothing matched the pattern. To ignore this error
-                                compare the return value to >= SG_SUCCESS.
+        @return SG_ERR_NOMATCH  Nothing matched the pattern. To ignore this 
+                                error compare return value to >= SG_SUCCESS.
         @return SG_ERR_MEMORY   Out of memory failure.
         @return SG_ERR_FAILURE  General failure.
      */
@@ -510,9 +516,9 @@ public:
 
 private:
     /*! @brief The argv array has it's members stored as either an offset into
-        the string buffer, or as pointers to their string in the buffer. The offsets
-        are used because if the string buffer is dynamically resized, all pointers
-        into that buffer would become invalid.
+        the string buffer, or as pointers to their string in the buffer. The 
+        offsets are used because if the string buffer is dynamically resized, 
+        all pointers into that buffer would become invalid.
      */
     enum ARG_ARRAY_TYPE { OFFSETS, POINTERS };
 
@@ -533,15 +539,15 @@ private:
 
 private:
     unsigned int        m_uiFlags;
-    ARG_ARRAY_TYPE      m_nArgArrayType;    //!< is the argv array storing indexes or pointers
-    SOCHAR **           m_rgpArgs;          //!< argv array
-    int                 m_nReservedSlots;   //!< number of client reserved slots in the argv array
+    ARG_ARRAY_TYPE      m_nArgArrayType;    //!< argv is indexes or pointers
+    SOCHAR **           m_rgpArgs;          //!< argv 
+    int                 m_nReservedSlots;   //!< # client slots in argv array
     int                 m_nArgsSize;        //!< allocated size of array
     int                 m_nArgsLen;         //!< used length
     SOCHAR *            m_pBuffer;          //!< argv string buffer
     size_t              m_uiBufferSize;     //!< allocated size of buffer
     size_t              m_uiBufferLen;      //!< used length of buffer
-    SOCHAR              m_szPathPrefix[MAX_PATH]; //!< path prefix of any wildcard filenames
+    SOCHAR              m_szPathPrefix[MAX_PATH]; //!< wildcard path prefix
 };
 
 // ---------------------------------------------------------------------------
@@ -601,9 +607,9 @@ CSimpleGlobTempl<SOCHAR>::Add(
     )
 {
 #ifdef _WIN32
-    // Windows FindFirst/FindNext recognizes forward slash as the same as backward slash
-    // and follows the directories. We need to do the same when calculating the prefix
-    // and when we have no wildcards.
+    // Windows FindFirst/FindNext recognizes forward slash as the same as 
+    // backward slash and follows the directories. We need to do the same 
+    // when calculating the prefix and when we have no wildcards.
     SOCHAR szFileSpec[MAX_PATH];
     SimpleGlobUtil::strcpy_s(szFileSpec, MAX_PATH, a_pszFileSpec);
     const SOCHAR * pszPath = SimpleGlobUtil::strchr(szFileSpec, '/');
@@ -630,9 +636,11 @@ CSimpleGlobTempl<SOCHAR>::Add(
     }
 
 #ifdef _WIN32
-    // Windows doesn't return the directory with the filename, so we need to extract the
-    // path from the search string ourselves and prefix it to the filename we get back.
-    const SOCHAR * pszFilename = SimpleGlobUtil::strrchr(a_pszFileSpec, SG_PATH_CHAR);
+    // Windows doesn't return the directory with the filename, so we need to 
+    // extract the path from the search string ourselves and prefix it to the 
+    // filename we get back.
+    const SOCHAR * pszFilename = 
+        SimpleGlobUtil::strrchr(a_pszFileSpec, SG_PATH_CHAR);
     if (pszFilename) {
         SimpleGlobUtil::strcpy_s(m_szPathPrefix, MAX_PATH, a_pszFileSpec);
         m_szPathPrefix[pszFilename - a_pszFileSpec + 1] = 0;
@@ -724,9 +732,9 @@ CSimpleGlobTempl<SOCHAR>::AppendName(
         return SG_ERR_MEMORY;
     }
 
-    // ensure that we have enough room in the string buffer
+    // ensure that we have enough room in the string buffer (+1 for null)
     size_t uiPrefixLen = SimpleGlobUtil::strlen(m_szPathPrefix);
-    size_t uiLen = uiPrefixLen + SimpleGlobUtil::strlen(a_pszFileName) + 1; // + null character
+    size_t uiLen = uiPrefixLen + SimpleGlobUtil::strlen(a_pszFileName) + 1; 
     if (a_bIsDir && (m_uiFlags & SG_GLOB_MARK) == SG_GLOB_MARK) {
         ++uiLen;    // need space for the backslash
     }
@@ -734,8 +742,8 @@ CSimpleGlobTempl<SOCHAR>::AppendName(
         return SG_ERR_MEMORY;
     }
 
-    // add this entry
-    m_rgpArgs[m_nArgsLen++] = (SOCHAR*)m_uiBufferLen;    // offset from beginning of buffer
+    // add this entry. m_uiBufferLen is offset from beginning of buffer.
+    m_rgpArgs[m_nArgsLen++] = (SOCHAR*)m_uiBufferLen;
     SimpleGlobUtil::strcpy_s(m_pBuffer + m_uiBufferLen,
         m_uiBufferSize - m_uiBufferLen, m_szPathPrefix);
     SimpleGlobUtil::strcpy_s(m_pBuffer + m_uiBufferLen + uiPrefixLen,
@@ -785,7 +793,8 @@ CSimpleGlobTempl<SOCHAR>::GrowArgvArray(
 {
     if (a_nNewLen >= m_nArgsSize) {
         static const int SG_ARGV_INITIAL_SIZE = 32;
-        int nNewSize = (m_nArgsSize > 0) ? m_nArgsSize * 2 : SG_ARGV_INITIAL_SIZE;
+        int nNewSize = (m_nArgsSize > 0) ? 
+            m_nArgsSize * 2 : SG_ARGV_INITIAL_SIZE;
         while (a_nNewLen >= nNewSize) {
             nNewSize *= 2;
         }
@@ -805,7 +814,8 @@ CSimpleGlobTempl<SOCHAR>::GrowStringBuffer(
 {
     if (a_uiMinSize >= m_uiBufferSize) {
         static const int SG_BUFFER_INITIAL_SIZE = 1024;
-        size_t uiNewSize = (m_uiBufferSize > 0) ? m_uiBufferSize * 2 : SG_BUFFER_INITIAL_SIZE;
+        size_t uiNewSize = (m_uiBufferSize > 0) ? 
+            m_uiBufferSize * 2 : SG_BUFFER_INITIAL_SIZE;
         while (a_uiMinSize >= uiNewSize) {
             uiNewSize *= 2;
         }
@@ -837,12 +847,18 @@ CSimpleGlobTempl<SOCHAR>::fileSortCompare(
 //                                  TYPE DEFINITIONS
 // ---------------------------------------------------------------------------
 
-typedef CSimpleGlobTempl<char>    CSimpleGlobA; /*!< @brief ASCII/MBCS version of CSimpleGlob */
-typedef CSimpleGlobTempl<wchar_t> CSimpleGlobW; /*!< @brief wchar_t version of CSimpleGlob */
+/*! @brief ASCII/MBCS version of CSimpleGlob */
+typedef CSimpleGlobTempl<char>    CSimpleGlobA;
+
+/*! @brief wchar_t version of CSimpleGlob */
+typedef CSimpleGlobTempl<wchar_t> CSimpleGlobW; 
+
 #if defined(_UNICODE)
-# define CSimpleGlob CSimpleGlobW   /*!< @brief TCHAR version dependent on if _UNICODE is defined */
+/*! @brief TCHAR version dependent on if _UNICODE is defined */
+# define CSimpleGlob CSimpleGlobW   
 #else
-# define CSimpleGlob CSimpleGlobA   /*!< @brief TCHAR version dependent on if _UNICODE is defined */
+/*! @brief TCHAR version dependent on if _UNICODE is defined */
+# define CSimpleGlob CSimpleGlobA   
 #endif
 
 #endif // INCLUDED_SimpleGlob

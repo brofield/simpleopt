@@ -153,12 +153,12 @@ fullSample FILE0 --multi 1
 Required argument is missing: '--multi' (use --help to get command line help)
 file  0: 'FILE0'
  
+fullSample /sep SEP1 
+option:  9, text: '-sep', arg: 'SEP1'
+ 
 fullSample /-sep SEP1 
 file  0: '\-sep'
 file  1: 'SEP1'
- 
-fullSample /sep SEP1 
-option:  9, text: '-sep', arg: 'SEP1'
  
 fullSample --noslash /sep SEP1 
 file  0: '\sep'
