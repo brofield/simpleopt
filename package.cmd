@@ -17,7 +17,7 @@ DEL /Q "simpleOpt.suo"
 START "Generate documentation" /WAIT simpleOpt.doxy
 cd ..
 del simpleopt-x.zip
-zip simpleopt-x.zip simpleopt/*.*
+zip simpleopt-x.zip simpleopt/*
 del simpleopt-dic.zip
 zip -r simpleopt-doc.zip simpleopt-doc/
 cd simpleopt

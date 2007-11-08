@@ -3,57 +3,72 @@
     @version 3.0
 
     @brief A cross-platform command line library which can parse almost any
-    of the standard command line formats in use today. It is designed explicitly
-    to be portable to any platform and has been tested on Windows and Linux.
-    See CSimpleOptTempl for the class definition.
+    of the standard command line formats in use today. It is designed 
+    explicitly to be portable to any platform and has been tested on Windows 
+    and Linux. See CSimpleOptTempl for the class definition.
 
     @section features FEATURES
 
-    -   MIT Licence allows free use in all software (including GPL and commercial)
+    -   MIT Licence allows free use in all software (including GPL 
+        and commercial)
     -   multi-platform (Windows 95/98/ME/NT/2K/XP, Linux, Unix)
     -   supports all lengths of option names:
         <table width="60%">
-            <tr><td width="30%"> -           <td>switch character only (e.g. use stdin for input)
-            <tr><td> -o          <td>short (single character)
-            <tr><td> -long       <td>long (multiple character, single switch character)
-            <tr><td> --longer    <td>long (multiple character, multiple switch characters)
+            <tr><td width="30%"> - 
+                <td>switch character only (e.g. use stdin for input)
+            <tr><td> -o          
+                <td>short (single character)
+            <tr><td> -long       
+                <td>long (multiple character, single switch character)
+            <tr><td> --longer    
+                <td>long (multiple character, multiple switch characters)
         </table>
     -   supports all types of arguments for options:
         <table width="60%">
-            <tr><td width="30%"> --option        <td>short/long option flag (no argument)
-            <tr><td> --option ARG    <td>short/long option with separate required argument
-            <tr><td> --option=ARG    <td>short/long option with combined required argument
-            <tr><td> --option[=ARG]  <td>short/long option with combined optional argument
-            <tr><td> -oARG           <td>short option with combined required argument
-            <tr><td> -o[ARG]         <td>short option with combined optional argument
+            <tr><td width="30%"> --option        
+                <td>short/long option flag (no argument)
+            <tr><td> --option ARG    
+                <td>short/long option with separate required argument
+            <tr><td> --option=ARG    
+                <td>short/long option with combined required argument
+            <tr><td> --option[=ARG]  
+                <td>short/long option with combined optional argument
+            <tr><td> -oARG           
+                <td>short option with combined required argument
+            <tr><td> -o[ARG]         
+                <td>short option with combined optional argument
         </table>
     -   supports options with multiple or variable numbers of arguments:
         <table width="60%">
-            <tr><td width="30%"> --multi ARG1 ARG2      <td>Multiple arguments
-            <tr><td> --multi N ARG-1 ARG-2 ... ARG-N    <td>Variable number of arguments
+            <tr><td width="30%"> --multi ARG1 ARG2      
+                <td>Multiple arguments
+            <tr><td> --multi N ARG-1 ARG-2 ... ARG-N    
+                <td>Variable number of arguments
         </table>
-    -   supports case-insensitive option matching on short, long and/or word arguments.
-    -   supports options which do not use a switch character. i.e. a special word
-        which is construed as an option. e.g. "foo.exe open /directory/file.txt"
-        supports clumping of multiple short options (no arguments) in a string, e.g.
-        "foo.exe -abcdef file1" <==> "foo.exe -a -b -c -d -e -f file1"
-    -   automatic recognition of a single slash as equivalent to a single hyphen
-        on Windows, e.g. "/f FILE" is equivalent to "-f FILE".
+    -   supports case-insensitive option matching on short, long and/or 
+        word arguments.
+    -   supports options which do not use a switch character. i.e. a special 
+        word which is construed as an option. 
+        e.g. "foo.exe open /directory/file.txt" 
+    -   supports clumping of multiple short options (no arguments) in a string 
+        e.g. "foo.exe -abcdef file1" <==> "foo.exe -a -b -c -d -e -f file1"
+    -   automatic recognition of a single slash as equivalent to a single 
+        hyphen on Windows, e.g. "/f FILE" is equivalent to "-f FILE".
     -   file arguments can appear anywhere in the argument list:
         "foo.exe file1.txt -a ARG file2.txt --flag file3.txt file4.txt"
-        files will be returned to the application in the same order they were supplied
-        on the command line
+        files will be returned to the application in the same order they were 
+        supplied on the command line
     -   short-circuit option matching: "--man" will match "--mandate"
-        invalid options can be handled while continuing to parse the command line
-        valid options list can be changed dynamically during command line processing,
-        i.e. accept different options depending on an option supplied earlier in the
-        command line.
+        invalid options can be handled while continuing to parse the command 
+        line valid options list can be changed dynamically during command line
+        processing, i.e. accept different options depending on an option 
+        supplied earlier in the command line.
     -   implemented with only a single C++ header file
     -   optionally use no C runtime or OS functions
     -   char, wchar_t and Windows TCHAR in the same program
     -   complete working examples included
-    -   compiles cleanly at warning level 4 (Windows/VC.NET 2003), warning level
-        3 (Windows/VC6) and -Wall (Linux/gcc)
+    -   compiles cleanly at warning level 4 (Windows/VC.NET 2003), warning 
+        level 3 (Windows/VC6) and -Wall (Linux/gcc)
 
     @section usage USAGE
 
@@ -68,59 +83,61 @@
 
     <li> Define an array of valid options for your program.
 
-        <pre>
-        @link CSimpleOptTempl::SOption CSimpleOpt::SOption @endlink g_rgOptions[] = {
-            { OPT_FLAG, _T("-a"),     SO_NONE    }, // "-a"
-            { OPT_FLAG, _T("-b"),     SO_NONE    }, // "-b"
-            { OPT_ARG,  _T("-f"),     SO_REQ_SEP }, // "-f ARG"
-            { OPT_HELP, _T("-?"),     SO_NONE    }, // "-?"
-            { OPT_HELP, _T("--help"), SO_NONE    }, // "--help"
-            SO_END_OF_OPTIONS                       // END
-        };
-        </pre>
+<pre>
+@link CSimpleOptTempl::SOption CSimpleOpt::SOption @endlink g_rgOptions[] = {
+    { OPT_FLAG, _T("-a"),     SO_NONE    }, // "-a"
+    { OPT_FLAG, _T("-b"),     SO_NONE    }, // "-b"
+    { OPT_ARG,  _T("-f"),     SO_REQ_SEP }, // "-f ARG"
+    { OPT_HELP, _T("-?"),     SO_NONE    }, // "-?"
+    { OPT_HELP, _T("--help"), SO_NONE    }, // "--help"
+    SO_END_OF_OPTIONS                       // END
+};
+</pre>
 
         Note that all options must start with a hyphen even if the slash will
         be accepted. This is because the slash character is automatically
-        converted into a hyphen to test against the list of options. For example,
-        the following line matches both "-?" and "/?" (on Windows).
+        converted into a hyphen to test against the list of options. 
+        For example, the following line matches both "-?" and "/?" 
+        (on Windows).
 
         <pre>
         { OPT_HELP, _T("-?"),     SO_NONE    }, // "-?"
         </pre>
 
-   <li> Instantiate a CSimpleOpt object supplying argc, argv and the option table
+   <li> Instantiate a CSimpleOpt object supplying argc, argv and the option 
+        table
 
-        <pre>
-        @link CSimpleOptTempl CSimpleOpt @endlink args(argc, argv, g_rgOptions);
-        </pre>
+<pre>
+@link CSimpleOptTempl CSimpleOpt @endlink args(argc, argv, g_rgOptions);
+</pre>
 
-   <li> Process the arguments by calling Next() until it returns false. On each call,
-        first check for an error by calling LastError(), then either handle the error
-        or process the argument.
+   <li> Process the arguments by calling Next() until it returns false. 
+        On each call, first check for an error by calling LastError(), then 
+        either handle the error or process the argument.
 
-        <pre>
-        while (args.Next()) {
-            if (args.LastError() == SO_SUCCESS) {
-                handle option: use OptionId(), OptionText() and OptionArg()
-            }
-            else {
-                handle error: see ESOError enums
-            }
-        }
-        </pre>
+<pre>
+while (args.Next()) {
+    if (args.LastError() == SO_SUCCESS) {
+        handle option: use OptionId(), OptionText() and OptionArg()
+    }
+    else {
+        handle error: see ESOError enums
+    }
+}
+</pre>
 
    <li> Process all non-option arguments with File(), Files() and FileCount()
 
-        <pre>
-        ShowFiles(args.FileCount(), args.Files());
-        </pre>
+<pre>
+ShowFiles(args.FileCount(), args.Files());
+</pre>
 
     </ol>
 
     @section notes NOTES
 
-    -   In MBCS mode, this library is guaranteed to work correctly only when all
-        option names use only ASCII characters.
+    -   In MBCS mode, this library is guaranteed to work correctly only when
+        all option names use only ASCII characters.
     -   Note that if case-insensitive matching is being used then the first
         matching option in the argument list will be returned.
 
@@ -131,22 +148,23 @@
 
     Copyright (c) 2006-2007, Brodie Thiesfield
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is furnished
-    to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 /*! @mainpage
@@ -159,87 +177,140 @@
 
     @section SimpleOpt SimpleOpt
 
-    A cross-platform library providing a simple method to parse almost any of the
-    standard command-line formats in use today.
+    A cross-platform library providing a simple method to parse almost any of
+    the standard command-line formats in use today.
 
-    See the @link SimpleOpt.h SimpleOpt @endlink documentation for full details.
+    See the @link SimpleOpt.h SimpleOpt @endlink documentation for full 
+    details.
 
     @section SimpleGlob SimpleGlob
 
     A cross-platform file globbing library providing the ability to
-    expand wildcards in command-line arguments to a list of all matching files.
+    expand wildcards in command-line arguments to a list of all matching 
+    files.
 
-    See the @link SimpleGlob.h SimpleGlob @endlink documentation for full details.
+    See the @link SimpleGlob.h SimpleGlob @endlink documentation for full 
+    details.
 */
 
 #ifndef INCLUDED_SimpleOpt
 #define INCLUDED_SimpleOpt
 
-// Default the max arguments to a fixed value. If you want to be able to handle
-// any number of arguments, then predefine this to 0 and it will use an internal
-// dynamically allocated buffer instead.
+// Default the max arguments to a fixed value. If you want to be able to 
+// handle any number of arguments, then predefine this to 0 and it will 
+// use an internal dynamically allocated buffer instead.
 #ifdef SO_MAX_ARGS
 # define SO_STATICBUF   SO_MAX_ARGS
 #else
-# include <memory.h>    // malloc, free
+# include <stdlib.h>    // malloc, free
+# include <string.h>    // memcpy
 # define SO_STATICBUF   50
 #endif
 
 //! Error values
 typedef enum _ESOError
 {
-    SO_SUCCESS          =  0,   //!< No error
-    SO_OPT_INVALID      = -1,   /*!< It looks like an option (it starts with a switch character),
-                                     but it isn't registered in the option table. */
-    SO_OPT_MULTIPLE     = -2,   /*!< Multiple options matched the supplied option text.
-                                     Only returned when NOT using SO_O_EXACT. */
-    SO_ARG_INVALID      = -3,   /*!< Option doesn't take an argument, but a combined argument
-                                     was supplied. */
-    SO_ARG_INVALID_TYPE = -4,   /*!< SO_REQ_CMB style-argument was supplied to a SO_REQ_SEP option
-                                     Only returned when using SO_O_PEDANTIC. */
-    SO_ARG_MISSING      = -5,   //!< Required argument was not supplied
-    SO_ARG_INVALID_DATA = -6    /*!< Option argument looks like another option.
-                                     Only returned when NOT using SO_O_NOERR. */
+    //! No error
+    SO_SUCCESS          =  0,   
+
+    /*! It looks like an option (it starts with a switch character), but 
+        it isn't registered in the option table. */
+    SO_OPT_INVALID      = -1,   
+
+    /*! Multiple options matched the supplied option text. 
+        Only returned when NOT using SO_O_EXACT. */
+    SO_OPT_MULTIPLE     = -2,   
+
+    /*! Option doesn't take an argument, but a combined argument was 
+        supplied. */
+    SO_ARG_INVALID      = -3,   
+
+    /*! SO_REQ_CMB style-argument was supplied to a SO_REQ_SEP option
+        Only returned when using SO_O_PEDANTIC. */
+    SO_ARG_INVALID_TYPE = -4,   
+
+    //! Required argument was not supplied
+    SO_ARG_MISSING      = -5,   
+
+    /*! Option argument looks like another option. 
+        Only returned when NOT using SO_O_NOERR. */
+    SO_ARG_INVALID_DATA = -6    
 } ESOError;
 
 //! Option flags
 enum _ESOFlags
 {
-    SO_O_EXACT       = 0x0001, /*!< Disallow partial matching of option names */
-    SO_O_NOSLASH     = 0x0002, /*!< Disallow use of slash as an option marker on Windows.
-                                    Un*x only ever recognizes a hyphen. */
-    SO_O_SHORTARG    = 0x0004, /*!< Permit arguments on single letter options with
-                                    no equals sign. e.g. -oARG or -o[ARG] */
-    SO_O_CLUMP       = 0x0008, /*!< Permit single character options to be clumped into
-                                    a single option string. e.g. "-a -b -c" <==> "-abc" */
-    SO_O_USEALL      = 0x0010, /*!< Process the entire argv array for options, including
-                                    the argv[0] entry. */
-    SO_O_NOERR       = 0x0020, /*!< Do not generate an error for invalid options. errors
-                                    for missing arguments will still be generated. invalid
-                                    options will be treated as files. invalid options in
-                                    clumps will be silently ignored. */
-    SO_O_PEDANTIC    = 0x0040, /*!< Validate argument type pedantically. Return an error when
-                                    a separated argument "-opt arg" is supplied by the user
-                                    as a combined argument "-opt=arg". By default this is
-                                    not considered an error. */
-    SO_O_ICASE_SHORT = 0x0100, /*!< Case-insensitive comparisons for short arguments */
-    SO_O_ICASE_LONG  = 0x0200, /*!< Case-insensitive comparisons for long arguments */
-    SO_O_ICASE_WORD  = 0x0400, /*!< Case-insensitive comparisons for word arguments 
-                                    i.e. arguments without any hyphens at the start. */
-    SO_O_ICASE       = 0x0700  /*!< Case-insensitive comparisons for all arg types */
+    /*! Disallow partial matching of option names */
+    SO_O_EXACT       = 0x0001, 
+
+    /*! Disallow use of slash as an option marker on Windows. 
+        Un*x only ever recognizes a hyphen. */
+    SO_O_NOSLASH     = 0x0002, 
+
+    /*! Permit arguments on single letter options with no equals sign. 
+        e.g. -oARG or -o[ARG] */
+    SO_O_SHORTARG    = 0x0004, 
+
+    /*! Permit single character options to be clumped into a single 
+        option string. e.g. "-a -b -c" <==> "-abc" */
+    SO_O_CLUMP       = 0x0008, 
+
+    /*! Process the entire argv array for options, including the 
+        argv[0] entry. */
+    SO_O_USEALL      = 0x0010, 
+
+    /*! Do not generate an error for invalid options. errors for missing 
+        arguments will still be generated. invalid options will be 
+        treated as files. invalid options in clumps will be silently 
+        ignored. */
+    SO_O_NOERR       = 0x0020, 
+
+    /*! Validate argument type pedantically. Return an error when a 
+        separated argument "-opt arg" is supplied by the user as a 
+        combined argument "-opt=arg". By default this is not considered 
+        an error. */
+    SO_O_PEDANTIC    = 0x0040, 
+
+    /*! Case-insensitive comparisons for short arguments */
+    SO_O_ICASE_SHORT = 0x0100, 
+
+    /*! Case-insensitive comparisons for long arguments */
+    SO_O_ICASE_LONG  = 0x0200, 
+
+    /*! Case-insensitive comparisons for word arguments 
+        i.e. arguments without any hyphens at the start. */
+    SO_O_ICASE_WORD  = 0x0400, 
+
+    /*! Case-insensitive comparisons for all arg types */
+    SO_O_ICASE       = 0x0700  
 };
 
-/*! Types of arguments that options may have. Note that some of the _ESOFlags are
-    not compatible with all argument types. SO_O_SHORTARG requires that relevant
-    options use either SO_REQ_CMB or SO_OPT. SO_O_CLUMP requires that relevant options
-    use only SO_NONE.
+/*! Types of arguments that options may have. Note that some of the _ESOFlags
+    are not compatible with all argument types. SO_O_SHORTARG requires that
+    relevant options use either SO_REQ_CMB or SO_OPT. SO_O_CLUMP requires 
+    that relevant options use only SO_NONE.
  */
 typedef enum _ESOArgType {
-    SO_NONE,    //!< No argument.                 -o                 --opt
-    SO_REQ_SEP, //!< Required separate argument.  -o ARG             --opt ARG
-    SO_REQ_CMB, //!< Required combined argument.  -oARG    -o=ARG    --opt=ARG
-    SO_OPT,     //!< Optional combined argument.  -o[ARG]  -o[=ARG]  --opt[=ARG]
-    SO_MULTI    //!< Multiple separate arguments. -o ARG1 ARG2 ... --opt ARG1 ARG2 ...
+    /*! No argument. Just the option flags.
+        e.g. -o         --opt */
+    SO_NONE,    
+
+    /*! Required separate argument.  
+        e.g. -o ARG     --opt ARG */
+    SO_REQ_SEP, 
+
+    /*! Required combined argument.  
+        e.g. -oARG      -o=ARG      --opt=ARG  */
+    SO_REQ_CMB, 
+
+    /*! Optional combined argument.  
+        e.g. -o[ARG]    -o[=ARG]    --opt[=ARG] */
+    SO_OPT, 
+
+    /*! Multiple separate arguments. The actual number of arguments is
+        determined programatically at the time the argument is processed.
+        e.g. -o N ARG1 ARG2 ... ARGN    --opt N ARG1 ARG2 ... ARGN */
+    SO_MULTI
 } ESOArgType;
 
 //! this option definition must be the last entry in the table
@@ -268,19 +339,36 @@ class CSimpleOptTempl
 public:
     /*! @brief Structure used to define all known options. */
     struct SOption {
-        int         nId;        //!< ID to return for this flag. Optional but must be >= 0
-        SOCHAR *    pszArg;     //!< arg string to search for, e.g.  "open", "-", "-f", "--file"
-                                // Note that on Windows the slash option marker will be converted
-                                // to a hyphen so that "-f" will also match "/f".
-        ESOArgType  nArgType;   //!< type of argument accepted by this option
+        /*! ID to return for this flag. Optional but must be >= 0 */
+        int         nId;        
+
+        /*! arg string to search for, e.g.  "open", "-", "-f", "--file" 
+            Note that on Windows the slash option marker will be converted
+            to a hyphen so that "-f" will also match "/f". */
+        SOCHAR *    pszArg;
+
+        /*! type of argument accepted by this option */
+        ESOArgType  nArgType;   
     };
 
     /*! @brief Initialize the class. Init() must be called later. */
-    CSimpleOptTempl() : m_rgShuffleBuf(NULL) { Init(0, NULL, NULL, 0); }
+    CSimpleOptTempl() 
+        : m_rgShuffleBuf(NULL) 
+    { 
+        Init(0, NULL, NULL, 0); 
+    }
 
     /*! @brief Initialize the class in preparation for use. */
-    CSimpleOptTempl(int argc, SOCHAR * argv[], const SOption * a_rgOptions, int a_nFlags = 0) 
-        : m_rgShuffleBuf(NULL) { Init(argc, argv, a_rgOptions, a_nFlags); }
+    CSimpleOptTempl(
+        int             argc, 
+        SOCHAR *        argv[], 
+        const SOption * a_rgOptions, 
+        int             a_nFlags = 0
+        ) 
+        : m_rgShuffleBuf(NULL) 
+    { 
+        Init(argc, argv, a_rgOptions, a_nFlags); 
+    }
 
 #ifndef SO_MAX_ARGS
     /*! @brief Deallocate any allocated memory. */
@@ -289,10 +377,10 @@ public:
 
     /*! @brief Initialize the class in preparation for calling Next.
 
-        The table of options pointed to by a_rgOptions does not need to be valid
-        at the time that Init() is called. However on every call to Next() the
-        table pointed to must be a valid options table with the last valid
-        entry set to SO_END_OF_OPTIONS.
+        The table of options pointed to by a_rgOptions does not need to be
+        valid at the time that Init() is called. However on every call to
+        Next() the table pointed to must be a valid options table with the
+        last valid entry set to SO_END_OF_OPTIONS.
 
         NOTE: the array pointed to by a_argv will be modified by this
         class and must not be used or modified outside of member calls to
@@ -301,19 +389,27 @@ public:
         @param a_argc       Argument array size
         @param a_argv       Argument array
         @param a_rgOptions  Valid option array
-        @param a_nFlags     Optional flags to modify the processing of the arguments
+        @param a_nFlags     Optional flags to modify the processing of 
+                            the arguments
 
         @return true        Successful 
         @return false       if SO_MAX_ARGC > 0:  Too many arguments
                             if SO_MAX_ARGC == 0: Memory allocation failure
     */
-    bool Init(int a_argc, SOCHAR * a_argv[], const SOption * a_rgOptions, int a_nFlags = 0);
+    bool Init(
+        int             a_argc, 
+        SOCHAR *        a_argv[], 
+        const SOption * a_rgOptions, 
+        int             a_nFlags = 0
+        );
 
     /*! @brief Change the current options table during option parsing.
 
         @param a_rgOptions  Valid option array
      */
-    inline void SetOptions(const SOption * a_rgOptions) { m_rgOptions = a_rgOptions; }
+    inline void SetOptions(const SOption * a_rgOptions) { 
+        m_rgOptions = a_rgOptions; 
+    }
 
     /*! @brief Change the current flags during option parsing.
 
@@ -325,15 +421,18 @@ public:
     inline void SetFlags(int a_nFlags) { m_nFlags = a_nFlags; }
 
     /*! @brief Query if a particular flag is set */
-    inline bool HasFlag(int a_nFlag) const { return (m_nFlags & a_nFlag) == a_nFlag; }
+    inline bool HasFlag(int a_nFlag) const { 
+        return (m_nFlags & a_nFlag) == a_nFlag; 
+    }
 
     /*! @brief Advance to the next option if available.
 
-        When all options have been processed it will return false. When true has been
-        returned, you must check for an invalid or unrecognized option using the
-        LastError() method. This will be return an error value other than SO_SUCCESS
-        on an error. All standard data (e.g. OptionText(), OptionArg(), OptionId(), etc)
-        will be available depending on the error.
+        When all options have been processed it will return false. When true
+        has been returned, you must check for an invalid or unrecognized
+        option using the LastError() method. This will be return an error 
+        value other than SO_SUCCESS on an error. All standard data 
+        (e.g. OptionText(), OptionArg(), OptionId(), etc) will be available
+        depending on the error.
 
         After all options have been processed, the remaining files from the
         command line can be processed in same order as they were passed to
@@ -346,18 +445,20 @@ public:
 
     /*! @brief Return the last error that occurred.
 
-        This function must always be called before processing the current option.
-        This function is available only when Next() has returned true.
+        This function must always be called before processing the current 
+        option. This function is available only when Next() has returned true.
      */
     inline ESOError LastError() const  { return m_nLastError; }
 
-    /*! @brief Return the nId value from the options array for the current option.
+    /*! @brief Return the nId value from the options array for the current
+        option.
 
         This function is available only when Next() has returned true.
      */
     inline int OptionId() const { return m_nOptionId; }
 
-    /*! @brief Return the pszArg from the options array for the current option.
+    /*! @brief Return the pszArg from the options array for the current 
+        option.
 
         This function is available only when Next() has returned true.
      */
@@ -418,7 +519,7 @@ private:
     }
     bool IsEqual(SOCHAR a_cLeft, SOCHAR a_cRight, int a_nArgType) const;
 
-    inline void CopyItems(SOCHAR ** ppDst, SOCHAR ** ppSrc, int nCount) const {
+    inline void Copy(SOCHAR ** ppDst, SOCHAR ** ppSrc, int nCount) const {
 #ifdef SO_MAX_ARGS
         // keep our promise of no CLIB usage
         while (nCount-- > 0) *ppDst++ = *ppSrc++;
@@ -428,20 +529,20 @@ private:
     }
 
 private:
-    const SOption * m_rgOptions;     // pointer to options table as passed in to soInit()
-    int             m_nFlags;        // flags for parsing the command line
-    int             m_nOptionIdx;    // index of the current option in argv
-    int             m_nOptionId;     // id of the current option (or -1 if invalid option)
-    int             m_nNextOption;   // index of the next option to be processed
-    int             m_nLastArg;      // last unprocessed argument, after this are files
-    int             m_argc;          // argc to process
-    SOCHAR **       m_argv;          // argv (rearranged during processing)
-    SOCHAR *        m_pszOptionText; // text of the current option, e.g. "-f" or "--file"
-    SOCHAR *        m_pszOptionArg;  // argument for the current option, e.g. "c:\blah.txt" (or NULL if no argument)
-    SOCHAR *        m_pszClump;      // processing of clumped single character options
-    SOCHAR          m_szShort[3];    // extract short option text from clumps and combined arguments
-    ESOError        m_nLastError;    // error status from the last call
-    SOCHAR **       m_rgShuffleBuf;  // shuffle buffer
+    const SOption * m_rgOptions;     //!< pointer to options table 
+    int             m_nFlags;        //!< flags 
+    int             m_nOptionIdx;    //!< current argv option index
+    int             m_nOptionId;     //!< id of current option (-1 = invalid)
+    int             m_nNextOption;   //!< index of next option 
+    int             m_nLastArg;      //!< last argument, after this are files
+    int             m_argc;          //!< argc to process
+    SOCHAR **       m_argv;          //!< argv
+    SOCHAR *        m_pszOptionText; //!< curr option text, e.g. "-f"
+    SOCHAR *        m_pszOptionArg;  //!< curr option arg, e.g. "c:\file.txt"
+    SOCHAR *        m_pszClump;      //!< clumped single character options
+    SOCHAR          m_szShort[3];    //!< temp for clump and combined args
+    ESOError        m_nLastError;    //!< error status from the last call
+    SOCHAR **       m_rgShuffleBuf;  //!< shuffle buffer for large argc
 };
 
 // ---------------------------------------------------------------------------
@@ -499,7 +600,7 @@ CSimpleOptTempl<SOCHAR>::Next()
 {
 #ifdef SO_MAX_ARGS
     if (m_argc > SO_MAX_ARGS) {
-        SO_ASSERT(!"Too many args! Change SO_MAX_ARGS or check the return value of Init()!");
+        SO_ASSERT(!"Too many args! Check the return value of Init()!");
         return false;
     }
 #endif
@@ -626,8 +727,8 @@ CSimpleOptTempl<SOCHAR>::Next()
 
         case SO_REQ_SEP:
             if (m_pszOptionArg) {
-                // they wanted separate args, but we got a combined one, unless
-                // we are being pedantic about things, just accept it.
+                // they wanted separate args, but we got a combined one, 
+                // unless we are pedantic, just accept it.
                 if (HasFlag(SO_O_PEDANTIC)) {
                     m_nLastError = SO_ARG_INVALID_TYPE;
                 }
@@ -659,7 +760,10 @@ CSimpleOptTempl<SOCHAR>::Next()
 
     // we need to return the separate arg if required, just re-use the
     // multi-arg code because it all does the same thing
-    if (nArgType == SO_REQ_SEP && !m_pszOptionArg && m_nLastError == SO_SUCCESS) {
+    if (   nArgType == SO_REQ_SEP 
+        && !m_pszOptionArg 
+        && m_nLastError == SO_SUCCESS) 
+    {
         SOCHAR ** ppArgs = MultiArg(1);
         if (ppArgs) {
             m_pszOptionArg = *ppArgs;
@@ -754,13 +858,13 @@ CSimpleOptTempl<SOCHAR>::ShuffleArg(
     int nTail = m_argc - a_nStartIdx - a_nCount;
 
     // make a copy of the elements to be moved
-    CopyItems(buf, m_argv + a_nStartIdx, a_nCount);
+    Copy(buf, m_argv + a_nStartIdx, a_nCount);
 
     // move the tail down
-    CopyItems(m_argv + a_nStartIdx, m_argv + a_nStartIdx + a_nCount, nTail);
+    Copy(m_argv + a_nStartIdx, m_argv + a_nStartIdx + a_nCount, nTail);
 
     // append the moved elements to the tail
-    CopyItems(m_argv + a_nStartIdx + nTail, buf, a_nCount);
+    Copy(m_argv + a_nStartIdx + nTail, buf, a_nCount);
 
     // update the index of the last unshuffled arg
     m_nLastArg -= a_nCount;
@@ -920,12 +1024,18 @@ CSimpleOptTempl<SOCHAR>::MultiArg(
 //                                  TYPE DEFINITIONS
 // ---------------------------------------------------------------------------
 
-typedef CSimpleOptTempl<char>    CSimpleOptA; /*!< @brief ASCII/MBCS version of CSimpleOpt */
-typedef CSimpleOptTempl<wchar_t> CSimpleOptW; /*!< @brief wchar_t version of CSimpleOpt */
+/*! @brief ASCII/MBCS version of CSimpleOpt */
+typedef CSimpleOptTempl<char>    CSimpleOptA; 
+
+/*! @brief wchar_t version of CSimpleOpt */
+typedef CSimpleOptTempl<wchar_t> CSimpleOptW; 
+
 #if defined(_UNICODE)
-# define CSimpleOpt CSimpleOptW   /*!< @brief TCHAR version dependent on if _UNICODE is defined */
+/*! @brief TCHAR version dependent on if _UNICODE is defined */
+# define CSimpleOpt CSimpleOptW   
 #else
-# define CSimpleOpt CSimpleOptA   /*!< @brief TCHAR version dependent on if _UNICODE is defined */
+/*! @brief TCHAR version dependent on if _UNICODE is defined */
+# define CSimpleOpt CSimpleOptA   
 #endif
 
 #endif // INCLUDED_SimpleOpt

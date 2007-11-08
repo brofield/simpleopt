@@ -1,6 +1,15 @@
 @echo off
 goto main
 
+
+REM -------------------------------------------------------
+REM procedure: run a single test case 
+:testcase
+echo. >> %OUTPUT%
+echo fullSample %* >> %OUTPUT%
+%TESTDIR%\fullSample %* >> %OUTPUT%
+exit /b 0
+
 REM -------------------------------------------------------
 REM procedure: run all test cases
 :alltestcase
@@ -27,8 +36,8 @@ call :testcase FILE0 --multi 0 FILE1 --multi 4 ARG1 ARG2 ARG3 ARG4 FILE3
 call :testcase --multi 0
 call :testcase --multi 1
 call :testcase FILE0 --multi 1
-call :testcase /-sep SEP1
 call :testcase /sep SEP1
+call :testcase /-sep SEP1
 call :testcase --noslash /sep SEP1
 call :testcase --multi 1 -sep
 call :testcase --noerr --multi 1 -sep
@@ -42,14 +51,6 @@ call :testcase --icase-short -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 call :testcase --icase-long  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 call :testcase --icase-word  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 call :testcase --exact a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z
-exit /b 0
-
-REM -------------------------------------------------------
-REM procedure: run a single test case 
-:testcase
-echo. >> %OUTPUT%
-echo fullSample %* >> %OUTPUT%
-%TESTDIR%\fullSample %* >> %OUTPUT%
 exit /b 0
 
 REM -------------------------------------------------------
@@ -103,10 +104,10 @@ REM this file flags if there was an error
 if exist runtests.error del runtests.error
 
 if exist .\fullSample.exe (
-    set EXPECTED=..\runtests.txt
+    set EXPECTED=..\runtests.win.txt
     call :runtests .
 ) else (
-    set EXPECTED=runtests.txt
+    set EXPECTED=runtests.win.txt
     for %%d in (fullDebug fullDebugUnicode fullRelease fullReleaseUnicode) do call :runtests %%d
 )
 if exist runtests.error (
