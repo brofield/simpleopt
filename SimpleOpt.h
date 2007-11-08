@@ -1,6 +1,6 @@
 /*! @file SimpleOpt.h
 
-    @version 2.9
+    @version 3.0
 
     @brief A cross-platform command line library which can parse almost any
     of the standard command line formats in use today. It is designed explicitly
@@ -49,7 +49,7 @@
         i.e. accept different options depending on an option supplied earlier in the
         command line.
     -   implemented with only a single C++ header file
-    -   uses no C runtime or OS functions
+    -   optionally use no C runtime or OS functions
     -   char, wchar_t and Windows TCHAR in the same program
     -   complete working examples included
     -   compiles cleanly at warning level 4 (Windows/VC.NET 2003), warning level
@@ -175,6 +175,15 @@
 #ifndef INCLUDED_SimpleOpt
 #define INCLUDED_SimpleOpt
 
+// Default the max arguments to a fixed value. If you want to be able to handle
+// any number of arguments, then predefine this to 0 and it will use an internal
+// dynamically allocated buffer instead.
+#ifdef SO_MAX_ARGS
+# define SO_STATICBUF   SO_MAX_ARGS
+#else
+# include <memory.h>    // malloc, free
+# define SO_STATICBUF   50
+#endif
 
 //! Error values
 typedef enum _ESOError
@@ -189,7 +198,7 @@ typedef enum _ESOError
     SO_ARG_INVALID_TYPE = -4,   /*!< SO_REQ_CMB style-argument was supplied to a SO_REQ_SEP option
                                      Only returned when using SO_O_PEDANTIC. */
     SO_ARG_MISSING      = -5,   //!< Required argument was not supplied
-    SO_ARG_INVALID_DATA = -6,   /*!< Option argument looks like another option.
+    SO_ARG_INVALID_DATA = -6    /*!< Option argument looks like another option.
                                      Only returned when NOT using SO_O_NOERR. */
 } ESOError;
 
@@ -267,12 +276,16 @@ public:
     };
 
     /*! @brief Initialize the class. Init() must be called later. */
-    CSimpleOptTempl() { Init(0, NULL, NULL, 0); }
+    CSimpleOptTempl() : m_rgShuffleBuf(NULL) { Init(0, NULL, NULL, 0); }
 
     /*! @brief Initialize the class in preparation for use. */
-    CSimpleOptTempl(int argc, SOCHAR * argv[], const SOption * a_rgOptions, int a_nFlags = 0) {
-        Init(argc, argv, a_rgOptions, a_nFlags);
-    }
+    CSimpleOptTempl(int argc, SOCHAR * argv[], const SOption * a_rgOptions, int a_nFlags = 0) 
+        : m_rgShuffleBuf(NULL) { Init(argc, argv, a_rgOptions, a_nFlags); }
+
+#ifndef SO_MAX_ARGS
+    /*! @brief Deallocate any allocated memory. */
+    ~CSimpleOptTempl() { if (m_rgShuffleBuf) free(m_rgShuffleBuf); }
+#endif
 
     /*! @brief Initialize the class in preparation for calling Next.
 
@@ -289,8 +302,12 @@ public:
         @param a_argv       Argument array
         @param a_rgOptions  Valid option array
         @param a_nFlags     Optional flags to modify the processing of the arguments
+
+        @return true        Successful 
+        @return false       if SO_MAX_ARGC > 0:  Too many arguments
+                            if SO_MAX_ARGC == 0: Memory allocation failure
     */
-    void Init(int a_argc, SOCHAR * a_argv[], const SOption * a_rgOptions, int a_nFlags = 0);
+    bool Init(int a_argc, SOCHAR * a_argv[], const SOption * a_rgOptions, int a_nFlags = 0);
 
     /*! @brief Change the current options table during option parsing.
 
@@ -401,9 +418,18 @@ private:
     }
     bool IsEqual(SOCHAR a_cLeft, SOCHAR a_cRight, int a_nArgType) const;
 
+    inline void CopyItems(SOCHAR ** ppDst, SOCHAR ** ppSrc, int nCount) const {
+#ifdef SO_MAX_ARGS
+        // keep our promise of no CLIB usage
+        while (nCount-- > 0) *ppDst++ = *ppSrc++;
+#else
+        memcpy(ppDst, ppSrc, nCount * sizeof(SOCHAR*));
+#endif
+    }
+
 private:
     const SOption * m_rgOptions;     // pointer to options table as passed in to soInit()
-    int             m_nFlags;       // flags for parsing the command line
+    int             m_nFlags;        // flags for parsing the command line
     int             m_nOptionIdx;    // index of the current option in argv
     int             m_nOptionId;     // id of the current option (or -1 if invalid option)
     int             m_nNextOption;   // index of the next option to be processed
@@ -415,6 +441,7 @@ private:
     SOCHAR *        m_pszClump;      // processing of clumped single character options
     SOCHAR          m_szShort[3];    // extract short option text from clumps and combined arguments
     ESOError        m_nLastError;    // error status from the last call
+    SOCHAR **       m_rgShuffleBuf;  // shuffle buffer
 };
 
 // ---------------------------------------------------------------------------
@@ -422,7 +449,7 @@ private:
 // ---------------------------------------------------------------------------
 
 template<class SOCHAR>
-void
+bool
 CSimpleOptTempl<SOCHAR>::Init(
     int             a_argc,
     SOCHAR *        a_argv[],
@@ -444,12 +471,39 @@ CSimpleOptTempl<SOCHAR>::Init(
     m_szShort[2]     = (SOCHAR)'\0';
     m_nFlags         = a_nFlags;
     m_pszClump       = NULL;
+
+#ifdef SO_MAX_ARGS
+	if (m_argc > SO_MAX_ARGS) {
+        m_nLastError = SO_ARG_INVALID_DATA;
+        m_nLastArg = 0;
+		return false;
+	}
+#else
+    if (m_rgShuffleBuf) {
+        free(m_rgShuffleBuf);
+    }
+    if (m_argc > SO_STATICBUF) {
+        m_rgShuffleBuf = (SOCHAR**) malloc(sizeof(SOCHAR*) * m_argc);
+        if (!m_rgShuffleBuf) {
+            return false;
+        }
+    }
+#endif
+
+    return true;
 }
 
 template<class SOCHAR>
 bool
 CSimpleOptTempl<SOCHAR>::Next()
 {
+#ifdef SO_MAX_ARGS
+    if (m_argc > SO_MAX_ARGS) {
+        SO_ASSERT(!"Too many args! Change SO_MAX_ARGS or check the return value of Init()!");
+        return false;
+    }
+#endif
+
     // process a clumped option string if appropriate
     if (m_pszClump && *m_pszClump) {
         // silently discard invalid clumped option
@@ -695,30 +749,18 @@ CSimpleOptTempl<SOCHAR>::ShuffleArg(
     int a_nCount
     )
 {
-    SOCHAR * buf[200];
-    int n, nSrc, nDst;
+    SOCHAR * staticBuf[SO_STATICBUF];
+    SOCHAR ** buf = m_rgShuffleBuf ? m_rgShuffleBuf : staticBuf;
     int nTail = m_argc - a_nStartIdx - a_nCount;
 
     // make a copy of the elements to be moved
-    nSrc = a_nStartIdx;
-    nDst = 0;
-    while (nDst < a_nCount) {
-        buf[nDst++] = m_argv[nSrc++];
-    }
+    CopyItems(buf, m_argv + a_nStartIdx, a_nCount);
 
     // move the tail down
-    nSrc = a_nStartIdx + a_nCount;
-    nDst = a_nStartIdx;
-    for (n = 0; n < nTail; ++n) {
-        m_argv[nDst++] = m_argv[nSrc++];
-    }
+    CopyItems(m_argv + a_nStartIdx, m_argv + a_nStartIdx + a_nCount, nTail);
 
     // append the moved elements to the tail
-    nSrc = 0;
-    nDst = a_nStartIdx + nTail;
-    for (n = 0; n < a_nCount; ++n) {
-        m_argv[nDst++] = buf[nSrc++];
-    }
+    CopyItems(m_argv + a_nStartIdx + nTail, buf, a_nCount);
 
     // update the index of the last unshuffled arg
     m_nLastArg -= a_nCount;

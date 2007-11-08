@@ -41,6 +41,7 @@ call :testcase --icase -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 call :testcase --icase-short -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 call :testcase --icase-long  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 call :testcase --icase-word  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
+call :testcase --exact a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z
 exit /b 0
 
 REM -------------------------------------------------------
