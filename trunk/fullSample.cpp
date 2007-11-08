@@ -40,6 +40,7 @@
 
 #include <stdio.h>
 #include <locale.h>
+//#define SO_MAX_ARGS   54 // fixed size, no C lib use
 #include "SimpleOpt.h"
 #include "SimpleGlob.h"
 
