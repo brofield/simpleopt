@@ -1,3 +1,7 @@
+set VERSION=3.0
+
+set SEVENZIP="C:\Program Files\7-Zip\7z.exe"
+
 FOR /F "tokens=*" %%G IN ('DIR /AD /B /S basic*') DO (
     DEL /S /Q "%%G"
     RD "%%G"
@@ -14,10 +18,11 @@ DEL /Q "runtests.full*"
 DEL /Q "simpleOpt.ncb"
 ATTRIB -H "simpleOpt.suo"
 DEL /Q "simpleOpt.suo"
+DEL /Q "simpleOpt.opt"
 START "Generate documentation" /WAIT simpleOpt.doxy
 cd ..
-del simpleopt-x.zip
-zip simpleopt-x.zip simpleopt/*
-del simpleopt-dic.zip
-zip -r simpleopt-doc.zip simpleopt-doc/
+del simpleopt-%VERSION%.zip
+%SEVENZIP% a -tzip -r- -x!simpleopt\.svn simpleopt-%VERSION%.zip simpleopt\*
+del simpleopt-doc.zip
+%SEVENZIP% a -tzip -r simpleopt-doc.zip simpleopt-doc\*
 cd simpleopt

@@ -40,7 +40,6 @@
 #endif
 
 #include <stdio.h>
-#include <locale.h>
 //#define SO_MAX_ARGS   54 // fixed size, no C lib use
 #include "SimpleOpt.h"
 #include "SimpleGlob.h"
@@ -210,17 +209,15 @@ DoMultiArgs(
 
 
 int _tmain(int argc, TCHAR * argv[]) {
-    setlocale( LC_ALL, "Japanese" );
-
-    // get the flags to use for SimpleOpt from the command line
+    // process the command line to extract that flags for SimpleOpt 
     int nFlags = SO_O_USEALL;
-    CSimpleOpt flags(argc, argv, g_rgFlags, SO_O_NOERR|SO_O_EXACT);
-    while (flags.Next()) {
-        nFlags |= flags.OptionId();
+    CSimpleOpt args(argc, argv, g_rgFlags, SO_O_NOERR|SO_O_EXACT);
+    while (args.Next()) {
+        nFlags |= args.OptionId();
     }
 
     // now process the remainder of the command line with these flags
-    CSimpleOpt args(flags.FileCount(), flags.Files(), g_rgOptions, nFlags);
+    args.Init(args.FileCount(), args.Files(), g_rgOptions, nFlags);
     while (args.Next()) {
         if (args.LastError() != SO_SUCCESS) {
             _tprintf(
