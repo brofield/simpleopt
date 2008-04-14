@@ -1,13 +1,13 @@
 #!/bin/bash
-OUTPUT=runtests.out
-> $OUTPUT
+
+
 
 # -------------------------------------------------------
 # procedure: run a single test case
 testcase() {
-    echo "" >> $OUTPUT
-    echo "fullSample $@" >> $OUTPUT
-    ./fullSample $@ >> $OUTPUT
+    echo "" 
+    echo "fullSample $@" 
+    ./fullSample $@ 
 }
 
 # -------------------------------------------------------
@@ -51,6 +51,3 @@ testcase --icase-short -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 testcase --icase-long  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 testcase --icase-word  -E -F -S sep1 -SEP sep2 --SEP sep3 upcase
 testcase --exact a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z
-
-echo diff --unified=0 -b runtests.ux.txt runtests.out
-diff --unified=0 -b runtests.ux.txt runtests.out
