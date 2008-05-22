@@ -1,6 +1,6 @@
 /*! @file SimpleGlob.h
 
-    @version 3.1
+    @version 3.2
 
     @brief A cross-platform file globbing library providing the ability to
     expand wildcards in command-line arguments to a list of all matching 
@@ -190,7 +190,7 @@ enum SG_Error {
 
 // use assertions to test the input data
 #ifdef _DEBUG
-# ifdef _WIN32
+# ifdef _MSC_VER
 #  include <crtdbg.h>
 #  define SG_ASSERT(b)    _ASSERTE(b)
 # else
