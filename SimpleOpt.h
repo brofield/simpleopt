@@ -1,6 +1,6 @@
 /*! @file SimpleOpt.h
 
-    @version 3.1
+    @version 3.2
 
     @brief A cross-platform command line library which can parse almost any
     of the standard command line formats in use today. It is designed 
@@ -317,7 +317,7 @@ typedef enum _ESOArgType {
 #define SO_END_OF_OPTIONS   { -1, NULL, SO_NONE }
 
 #ifdef _DEBUG
-# ifdef _WIN32
+# ifdef _MSC_VER
 #  include <crtdbg.h>
 #  define SO_ASSERT(b)  _ASSERTE(b)
 # else
