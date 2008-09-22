@@ -1,6 +1,6 @@
 /*! @file SimpleOpt.h
 
-    @version 3.2
+    @version 3.3
 
     @brief A cross-platform command line library which can parse almost any
     of the standard command line formats in use today. It is designed 
@@ -506,6 +506,9 @@ public:
     inline SOCHAR ** Files() const { return &m_argv[m_nLastArg]; }
 
 private:
+    CSimpleOptTempl(const CSimpleOptTempl &); // disabled
+    CSimpleOptTempl & operator=(const CSimpleOptTempl &); // disabled
+
     SOCHAR PrepareArg(SOCHAR * a_pszString) const;
     bool NextClumped();
     void ShuffleArg(int a_nStartIdx, int a_nCount);

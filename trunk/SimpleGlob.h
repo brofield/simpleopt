@@ -1,6 +1,6 @@
 /*! @file SimpleGlob.h
 
-    @version 3.2
+    @version 3.3
 
     @brief A cross-platform file globbing library providing the ability to
     expand wildcards in command-line arguments to a list of all matching 
@@ -515,6 +515,9 @@ public:
     }
 
 private:
+    CSimpleGlobTempl(const CSimpleGlobTempl &); // disabled
+    CSimpleGlobTempl & operator=(const CSimpleGlobTempl &); // disabled
+
     /*! @brief The argv array has it's members stored as either an offset into
         the string buffer, or as pointers to their string in the buffer. The 
         offsets are used because if the string buffer is dynamically resized, 
