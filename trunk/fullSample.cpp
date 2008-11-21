@@ -69,6 +69,7 @@ static void ShowUsage()
         _T("--man    --mandy   --mandate                Shortcut matching tests\n")
         _T("--multi0 --multi1 ARG --multi2 ARG1 ARG2    Multiple argument tests\n")
         _T("--multi N ARG-1 ARG-2 ... ARG-N             Multiple argument tests\n")
+        _T("--                                          Stop argument processing\n")
         _T("open read write close zip unzip UPCASE      Special words\n")
         _T("\n")
         _T("-?  -h  -help  --help                       Output this help.\n")
@@ -92,7 +93,7 @@ CSimpleOpt::SOption g_rgFlags[] =
     SO_END_OF_OPTIONS
 };
 
-enum { OPT_HELP = 0, OPT_MULTI = 100, OPT_MULTI0, OPT_MULTI1, OPT_MULTI2  };
+enum { OPT_HELP = 0, OPT_MULTI = 100, OPT_MULTI0, OPT_MULTI1, OPT_MULTI2, OPT_STOP  };
 CSimpleOpt::SOption g_rgOptions[] =
 {
     { OPT_HELP,   _T("-?"),           SO_NONE    },
@@ -137,6 +138,7 @@ CSimpleOpt::SOption g_rgOptions[] =
     { OPT_MULTI0, _T("--multi0"),     SO_MULTI   },
     { OPT_MULTI1, _T("--multi1"),     SO_MULTI   },
     { OPT_MULTI2, _T("--multi2"),     SO_MULTI   },
+    { OPT_STOP,   _T("--"),           SO_NONE    },
     SO_END_OF_OPTIONS
 };
 
@@ -241,6 +243,9 @@ int _tmain(int argc, TCHAR * argv[]) {
             break;
         case OPT_MULTI2: 
             DoMultiArgs(args, 2);
+            break;
+        case OPT_STOP:
+            args.Stop();
             break;
         default:
             if (args.OptionArg()) {
