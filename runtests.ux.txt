@@ -288,3 +288,24 @@ file 48: 'w'
 file 49: 'x'
 file 50: 'y'
 file 51: 'z'
+
+fullSample -- 
+ 
+fullSample f1 -- f2 
+file  0: 'f1'
+file  1: 'f2'
+ 
+fullSample -man -- f1 f2 
+option: 17, text: '-man'
+file  0: 'f1'
+file  1: 'f2'
+ 
+fullSample -- -man f1 f2 
+file  0: '-man'
+file  1: 'f1'
+file  2: 'f2'
+ 
+fullSample f1 -- -man f2 
+file  0: 'f1'
+file  1: '-man'
+file  2: 'f2'

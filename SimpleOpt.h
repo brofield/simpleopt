@@ -1,6 +1,6 @@
 /*! @file SimpleOpt.h
 
-    @version 3.3
+    @version 3.4
 
     @brief A cross-platform command line library which can parse almost any
     of the standard command line formats in use today. It is designed 
@@ -443,6 +443,11 @@ public:
     */
     bool Next();
 
+    /*! Stops processing of the command line and returns all remaining
+        arguments as files. The next call to Next() will return false.
+     */
+    void Stop();
+
     /*! @brief Return the last error that occurred.
 
         This function must always be called before processing the current 
@@ -775,6 +780,15 @@ CSimpleOptTempl<SOCHAR>::Next()
     }
 
     return true;
+}
+
+template<class SOCHAR>
+void
+CSimpleOptTempl<SOCHAR>::Stop()
+{
+    if (m_nNextOption < m_nLastArg) {
+        ShuffleArg(m_nNextOption, m_nLastArg - m_nNextOption);
+    }
 }
 
 template<class SOCHAR>
