@@ -1,6 +1,6 @@
 /*! @file SimpleGlob.h
 
-    @version 3.4
+    @version 3.5
 
     @brief A cross-platform file globbing library providing the ability to
     expand wildcards in command-line arguments to a list of all matching 

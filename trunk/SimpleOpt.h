@@ -1,6 +1,6 @@
 /*! @file SimpleOpt.h
 
-    @version 3.4
+    @version 3.5
 
     @brief A cross-platform command line library which can parse almost any
     of the standard command line formats in use today. It is designed 
