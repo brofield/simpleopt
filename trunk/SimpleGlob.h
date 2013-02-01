@@ -353,17 +353,17 @@ struct SimpleGlobBase
     }
 
     bool IsDirS(char) const {
-        return GetFileTypeS(m_oFindDataA.dwFileAttributes) == SG_FILETYPE_DIR;
+        return this->GetFileTypeS(m_oFindDataA.dwFileAttributes) == SG_FILETYPE_DIR;
     }
     bool IsDirS(wchar_t) const {
-        return GetFileTypeS(m_oFindDataW.dwFileAttributes) == SG_FILETYPE_DIR;
+        return this->GetFileTypeS(m_oFindDataW.dwFileAttributes) == SG_FILETYPE_DIR;
     }
 
     SG_FileType GetFileTypeS(const char * a_pszPath) {
-        return GetFileTypeS(GetFileAttributesA(a_pszPath));
+        return this->GetFileTypeS(GetFileAttributesA(a_pszPath));
     }
     SG_FileType GetFileTypeS(const wchar_t * a_pszPath)  {
-        return GetFileTypeS(GetFileAttributesW(a_pszPath));
+        return this->GetFileTypeS(GetFileAttributesW(a_pszPath));
     }
     SG_FileType GetFileTypeS(DWORD a_dwAttribs) const {
         if (a_dwAttribs == INVALID_FILE_ATTRIBUTES) {
@@ -426,7 +426,7 @@ struct SimpleGlobBase
         UErrorCode status = U_ZERO_ERROR;
         u_strToUTF8(buf, sizeof(buf), NULL, a_pszFileSpec, -1, &status);
         if (U_FAILURE(status)) return SG_ERR_FAILURE;
-        return FindFirstFileS(buf, a_uiFlags);
+        return this->FindFirstFileS(buf, a_uiFlags);
     }
 #endif
 
@@ -441,7 +441,7 @@ struct SimpleGlobBase
 
 #if SG_HAVE_ICU
     bool FindNextFileS(UChar) {
-        return FindNextFileS((char)0);
+        return this->FindNextFileS((char)0);
     }
 #endif
 
@@ -458,7 +458,7 @@ struct SimpleGlobBase
 
 #if SG_HAVE_ICU
     const UChar * GetFileNameS(UChar) const {
-        const char * pszFile = GetFileNameS((char)0);
+        const char * pszFile = this->GetFileNameS((char)0);
         if (!pszFile) return NULL;
         UErrorCode status = U_ZERO_ERROR;
         memset(m_szBuf, 0, sizeof(m_szBuf));
@@ -475,7 +475,7 @@ struct SimpleGlobBase
 
 #if SG_HAVE_ICU
     bool IsDirS(UChar) const {
-        return IsDirS((char)0);
+        return this->IsDirS((char)0);
     }
 #endif
 
@@ -499,7 +499,7 @@ struct SimpleGlobBase
         UErrorCode status = U_ZERO_ERROR;
         u_strToUTF8(buf, sizeof(buf), NULL, a_pszPath, -1, &status);
         if (U_FAILURE(status)) return SG_FILETYPE_INVALID;
-        return GetFileTypeS(buf);
+        return this->GetFileTypeS(buf);
     }
 #endif
 
@@ -713,7 +713,7 @@ CSimpleGlobTempl<SOCHAR>::Add(
     if (!SimpleGlobUtil::strchr(a_pszFileSpec, '*') &&
         !SimpleGlobUtil::strchr(a_pszFileSpec, '?'))
     {
-        SG_FileType nType = GetFileTypeS(a_pszFileSpec);
+        SG_FileType nType = this->GetFileTypeS(a_pszFileSpec);
         if (nType == SG_FILETYPE_INVALID) {
             if (m_uiFlags & SG_GLOB_NOCHECK) {
                 return AppendName(a_pszFileSpec, false);
@@ -736,7 +736,7 @@ CSimpleGlobTempl<SOCHAR>::Add(
 #endif
 
     // search for the first match on the file
-    int rc = FindFirstFileS(a_pszFileSpec, m_uiFlags);
+    int rc = this->FindFirstFileS(a_pszFileSpec, m_uiFlags);
     if (rc != SG_SUCCESS) {
         if (rc == SG_ERR_NOMATCH && (m_uiFlags & SG_GLOB_NOCHECK)) {
             int ok = AppendName(a_pszFileSpec, false);
@@ -749,8 +749,8 @@ CSimpleGlobTempl<SOCHAR>::Add(
     int nError, nStartLen = m_nArgsLen;
     bool bSuccess;
     do {
-        nError = AppendName(GetFileNameS((SOCHAR)0), IsDirS((SOCHAR)0));
-        bSuccess = FindNextFileS((SOCHAR)0);
+        nError = AppendName(this->GetFileNameS((SOCHAR)0), this->IsDirS((SOCHAR)0));
+        bSuccess = this->FindNextFileS((SOCHAR)0);
     }
     while (nError == SG_SUCCESS && bSuccess);
     SimpleGlobBase<SOCHAR>::FindDone();
