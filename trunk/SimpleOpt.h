@@ -1,6 +1,6 @@
 /*! @file SimpleOpt.h
 
-    @version 3.5
+    @version 3.6
 
     @brief A cross-platform command line library which can parse almost any
     of the standard command line formats in use today. It is designed 
@@ -8,7 +8,6 @@
     and Linux. See CSimpleOptTempl for the class definition.
 
     @section features FEATURES
-
     -   MIT Licence allows free use in all software (including GPL 
         and commercial)
     -   multi-platform (Windows 95/98/ME/NT/2K/XP, Linux, Unix)
@@ -71,18 +70,13 @@
         level 3 (Windows/VC6) and -Wall (Linux/gcc)
 
     @section usage USAGE
-
     The SimpleOpt class is used by following these steps:
-
-    <ol>
+<ol>
     <li> Include the SimpleOpt.h header file
-
         <pre>
         \#include "SimpleOpt.h"
         </pre>
-
     <li> Define an array of valid options for your program.
-
 <pre>
 @link CSimpleOptTempl::SOption CSimpleOpt::SOption @endlink g_rgOptions[] = {
     { OPT_FLAG, _T("-a"),     SO_NONE    }, // "-a"
@@ -93,28 +87,22 @@
     SO_END_OF_OPTIONS                       // END
 };
 </pre>
-
         Note that all options must start with a hyphen even if the slash will
         be accepted. This is because the slash character is automatically
         converted into a hyphen to test against the list of options. 
         For example, the following line matches both "-?" and "/?" 
         (on Windows).
-
-        <pre>
-        { OPT_HELP, _T("-?"),     SO_NONE    }, // "-?"
-        </pre>
-
+<pre>
+    { OPT_HELP, _T("-?"),     SO_NONE    }, // "-?"
+</pre>
    <li> Instantiate a CSimpleOpt object supplying argc, argv and the option 
         table
-
 <pre>
 @link CSimpleOptTempl CSimpleOpt @endlink args(argc, argv, g_rgOptions);
 </pre>
-
    <li> Process the arguments by calling Next() until it returns false. 
         On each call, first check for an error by calling LastError(), then 
         either handle the error or process the argument.
-
 <pre>
 while (args.Next()) {
     if (args.LastError() == SO_SUCCESS) {
@@ -125,28 +113,24 @@ while (args.Next()) {
     }
 }
 </pre>
-
    <li> Process all non-option arguments with File(), Files() and FileCount()
-
 <pre>
 ShowFiles(args.FileCount(), args.Files());
 </pre>
-
     </ol>
 
     @section notes NOTES
-
     -   In MBCS mode, this library is guaranteed to work correctly only when
         all option names use only ASCII characters.
     -   Note that if case-insensitive matching is being used then the first
         matching option in the argument list will be returned.
 
     @section licence MIT LICENCE
-
+<pre>
     The licence text below is the boilerplate "MIT Licence" used from:
     http://www.opensource.org/licenses/mit-license.php
 
-    Copyright (c) 2006-2007, Brodie Thiesfield
+    Copyright (c) 2006-2013, Brodie Thiesfield
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -165,6 +149,7 @@ ShowFiles(args.FileCount(), args.Files());
     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</pre>
 */
 
 /*! @mainpage
@@ -833,6 +818,7 @@ CSimpleOptTempl<SOCHAR>::NextClumped()
 
     // unknown option
     if (nTableIdx < 0) {
+        m_pszOptionText = m_szShort; // invalid option
         m_nLastError = (ESOError) nTableIdx; // error code
         return false;
     }

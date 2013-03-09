@@ -309,3 +309,28 @@ fullSample f1 -- -man f2
 file  0: 'f1'
 file  1: '-man'
 file  2: 'f2'
+ 
+fullSample --clump -d 
+option:  2, text: '-d'
+ 
+fullSample --clump -defg 
+option:  2, text: '-d'
+option:  3, text: '-e'
+option:  4, text: '-f'
+option:  5, text: '-g'
+ 
+fullSample --clump -a 
+Unrecognized option: '-a' (use --help to get command line help)
+ 
+fullSample --clump -da 
+option:  2, text: '-d'
+Unrecognized option: '-a' (use --help to get command line help)
+ 
+fullSample --clump -ad 
+Unrecognized option: '-a' (use --help to get command line help)
+option:  2, text: '-d'
+ 
+fullSample --clump -dae 
+option:  2, text: '-d'
+Unrecognized option: '-a' (use --help to get command line help)
+option:  3, text: '-e'
