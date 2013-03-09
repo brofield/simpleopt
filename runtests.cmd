@@ -56,6 +56,12 @@ call :testcase f1 -- f2
 call :testcase -man -- f1 f2
 call :testcase -- -man f1 f2
 call :testcase f1 -- -man f2
+call :testcase --clump -d
+call :testcase --clump -defg
+call :testcase --clump -a
+call :testcase --clump -da
+call :testcase --clump -ad
+call :testcase --clump -dae
 exit /b 0
 
 REM -------------------------------------------------------

@@ -1,6 +1,6 @@
 /*! @file SimpleGlob.h
 
-    @version 3.5
+    @version 3.6
 
     @brief A cross-platform file globbing library providing the ability to
     expand wildcards in command-line arguments to a list of all matching 
@@ -9,7 +9,6 @@
     definition.
 
     @section features FEATURES
-
     -   MIT Licence allows free use in all software (including GPL and 
         commercial)
     -   multi-platform (Windows 95/98/ME/NT/2K/XP, Linux, Unix)
@@ -23,9 +22,7 @@
         warning level 3 (Windows/VC6) and -Wall (Linux/gcc)
 
     @section usage USAGE
-
     The SimpleGlob class is used by following these steps:
-
     <ol>
     <li> Include the SimpleGlob.h header file
 
@@ -57,11 +54,11 @@
     </ol>
 
     @section licence MIT LICENCE
-
+<pre>
     The licence text below is the boilerplate "MIT Licence" used from:
     http://www.opensource.org/licenses/mit-license.php
 
-    Copyright (c) 2006-2007, Brodie Thiesfield
+    Copyright (c) 2006-2013, Brodie Thiesfield
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -80,6 +77,7 @@
     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</pre>
 */
 
 #ifndef INCLUDED_SimpleGlob

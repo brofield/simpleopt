@@ -56,3 +56,9 @@ testcase f1 -- f2
 testcase -man -- f1 f2
 testcase -- -man f1 f2
 testcase f1 -- -man f2
+testcase --clump -d
+testcase --clump -defg
+testcase --clump -a
+testcase --clump -da
+testcase --clump -ad
+testcase --clump -dae
