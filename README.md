@@ -60,17 +60,17 @@ The SimpleOpt class is used by following these steps:
 * Define an array of valid options for your program. Note that this can be switched to a different table during processing as desired.
 ```c++
 CSimpleOpt::SOption g_rgOptions[] = {
-    { OPT_FLAG, _T("-a"), SO_NONE }, // "-a"
-    { OPT_FLAG, _T("-b"), SO_NONE }, // "-b"
-    { OPT_ARG, _T("-f"), SO_REQ_SEP }, // "-f ARG"
-    { OPT_HELP, _T("-?"), SO_NONE }, // "-?"
-    { OPT_HELP, _T("--help"), SO_NONE }, // "--help"
-    SO_END_OF_OPTIONS // END
+    { OPT_FLAG, "-a", SO_NONE },     // "-a"
+    { OPT_FLAG, "-b", SO_NONE },     // "-b"
+    { OPT_ARG,  "-f", SO_REQ_SEP },  // "-f ARG"
+    { OPT_HELP, "-?", SO_NONE },     // "-?"
+    { OPT_HELP, "--help", SO_NONE }, // "--help"
+    SO_END_OF_OPTIONS                // END
 };
 ```
 Note that all options must start with a hyphen even if the slash will be accepted. This is because the slash character is automatically converted into a hyphen to test against the list of options. For example, the following line matches both ```-?``` and ```/?``` (on Windows).
 ```c++
-    { OPT_HELP, _T("-?"), SO_NONE }, // "-?"
+    { OPT_HELP, "-?", SO_NONE }, // "-?"
 ```
 *Instantiate a CSimpleOpt object supplying argc, argv and the option table
 ```c++
