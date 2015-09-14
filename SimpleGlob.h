@@ -301,7 +301,9 @@ enum SG_FileType {
 # define INVALID_FILE_ATTRIBUTES    ((DWORD)-1)
 #endif
 
-#define SG_PATH_CHAR    '\\'
+#ifndef SG_PATH_CHAR
+# define SG_PATH_CHAR    '\\'
+#endif
 
 /*! @brief Windows glob implementation. */
 template<class SOCHAR>
@@ -381,7 +383,9 @@ private:
 
 #else // !_WIN32
 
-#define SG_PATH_CHAR    '/'
+#ifndef SG_PATH_CHAR
+# define SG_PATH_CHAR    '/'
+#endif
 
 /*! @brief Unix glob implementation. */
 template<class SOCHAR>
