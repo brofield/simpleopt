@@ -167,6 +167,8 @@ enum SG_Error {
 #ifdef _WIN32
 # define WIN32_LEAN_AND_MEAN
 # include <windows.h>
+# define _MBCS
+# include <mbstring.h>
 # include <stdint.h>
 # define sg_strchr          ::_mbschr
 # define sg_strrchr         ::_mbsrchr
