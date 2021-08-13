@@ -1,13 +1,13 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "basicSample", "basicSample.vcproj", "{BC46A349-E59A-4FDC-B56A-A668ED552758}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "basicSample", "examples\basicSample.vcproj", "{BC46A349-E59A-4FDC-B56A-A668ED552758}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fullSample", "fullSample.vcproj", "{4693B3B5-9070-4DC3-8C61-AAD6BF288E90}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fullSample", "examples\fullSample.vcproj", "{4693B3B5-9070-4DC3-8C61-AAD6BF288E90}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "globSample", "globSample.vcproj", "{F3EED8E1-D911-4CAC-A8A2-BF127A6AC772}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "globSample", "examples\globSample.vcproj", "{F3EED8E1-D911-4CAC-A8A2-BF127A6AC772}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

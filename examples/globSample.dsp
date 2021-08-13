@@ -144,11 +144,11 @@ SOURCE=.\globSample.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\SimpleGlob.h
+SOURCE=..\include\SimpleGlob.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\SimpleOpt.h
+SOURCE=..\include\SimpleOpt.h
 # End Source File
 # End Group
 # End Target

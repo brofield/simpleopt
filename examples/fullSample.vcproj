@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="globSample"
-	ProjectGUID="{F3EED8E1-D911-4CAC-A8A2-BF127A6AC772}"
+	Name="fullSample"
+	ProjectGUID="{4693B3B5-9070-4DC3-8C61-AAD6BF288E90}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="globDebug"
-			IntermediateDirectory="globDebug"
+			OutputDirectory="fullDebug"
+			IntermediateDirectory="fullDebug"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -31,10 +31,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/globSample.exe"
+				OutputFile="$(OutDir)/fullSample.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/globSample.pdb"
+				ProgramDatabaseFile="$(OutDir)/fullSample.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -60,8 +60,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="globRelease"
-			IntermediateDirectory="globRelease"
+			OutputDirectory="fullRelease"
+			IntermediateDirectory="fullRelease"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/globSample.exe"
+				OutputFile="$(OutDir)/fullSample.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
@@ -111,8 +111,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug Unicode|Win32"
-			OutputDirectory="globDebugUnicode"
-			IntermediateDirectory="globDebugUnicode"
+			OutputDirectory="fullDebugUnicode"
+			IntermediateDirectory="fullDebugUnicode"
 			ConfigurationType="1"
 			CharacterSet="1">
 			<Tool
@@ -130,10 +130,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/globSample.exe"
+				OutputFile="$(OutDir)/fullSample.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/globSample.pdb"
+				ProgramDatabaseFile="$(OutDir)/fullSample.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -159,8 +159,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|Win32"
-			OutputDirectory="globReleaseUnicode"
-			IntermediateDirectory="globReleaseUnicode"
+			OutputDirectory="fullReleaseUnicode"
+			IntermediateDirectory="fullReleaseUnicode"
 			ConfigurationType="1"
 			CharacterSet="1">
 			<Tool
@@ -180,7 +180,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/globSample.exe"
+				OutputFile="$(OutDir)/fullSample.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
@@ -216,17 +216,17 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="globSample.cpp">
+				RelativePath="fullSample.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="SimpleGlob.h">
+				RelativePath="../include/SimpleGlob.h">
 			</File>
 			<File
-				RelativePath="SimpleOpt.h">
+				RelativePath="../include/SimpleOpt.h">
 			</File>
 		</Filter>
 	</Files>
