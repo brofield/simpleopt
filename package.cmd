@@ -2,19 +2,19 @@ set VERSION=3.6
 
 set SEVENZIP="C:\Program Files\7-Zip\7z.exe"
 
-FOR /F "tokens=*" %%G IN ('DIR /AD /B /S basic*') DO (
+FOR /F "tokens=*" %%G IN ('DIR /AD /B /S examples\basic*') DO (
     DEL /S /Q "%%G"
     RD "%%G"
 )
-FOR /F "tokens=*" %%G IN ('DIR /AD /B /S full*') DO (
+FOR /F "tokens=*" %%G IN ('DIR /AD /B /S examples\full*') DO (
     DEL /S /Q "%%G"
     RD "%%G"
 )
-FOR /F "tokens=*" %%G IN ('DIR /AD /B /S glob*') DO (
+FOR /F "tokens=*" %%G IN ('DIR /AD /B /S examples\glob*') DO (
     DEL /S /Q "%%G"
     RD "%%G"
 )
-DEL /Q "runtests.full*"
+DEL /Q "examples\runtests.full*"
 DEL /Q "simpleOpt.ncb"
 ATTRIB -H "simpleOpt.suo"
 DEL /Q "simpleOpt.suo"

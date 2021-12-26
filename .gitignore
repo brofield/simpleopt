@@ -1,0 +1,8 @@
+*.exe
+*.o
+
+/examples/basicSample
+/examples/fullSample
+/examples/globSample
+/examples/runtests.out
+/build

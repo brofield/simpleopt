@@ -223,10 +223,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="SimpleGlob.h">
+				RelativePath="../include/SimpleGlob.h">
 			</File>
 			<File
-				RelativePath="SimpleOpt.h">
+				RelativePath="../include/SimpleOpt.h">
 			</File>
 		</Filter>
 	</Files>
