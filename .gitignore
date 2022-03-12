@@ -1,0 +1,6 @@
+*.user
+.vs/
+build/
+build.vs*/
+intermediate/
+
