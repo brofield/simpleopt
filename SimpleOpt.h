@@ -267,7 +267,10 @@ enum _ESOFlags
     SO_O_ICASE_WORD  = 0x0400, 
 
     /*! Case-insensitive comparisons for all arg types */
-    SO_O_ICASE       = 0x0700  
+    SO_O_ICASE       = 0x0700,  
+
+    /*! Set the parser stop at first unvalid option*/
+    SO_O_POSITIONAL = 0x0800
 };
 
 /*! Types of arguments that options may have. Note that some of the _ESOFlags
@@ -679,6 +682,11 @@ CSimpleOptTempl<SOCHAR>::Next()
         // and we are not suppressing errors for invalid options then it
         // is reported as an error, otherwise it is data.
         if (nTableIdx < 0) {
+            if (HasFlag(SO_O_POSITIONAL)) {
+                Stop();
+                return false;
+            }
+
             if (!HasFlag(SO_O_NOERR) && pszArg[0] == (SOCHAR)'-') {
                 m_pszOptionText = pszArg;
                 break;
