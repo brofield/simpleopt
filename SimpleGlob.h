@@ -165,7 +165,11 @@ enum SG_Error {
 // on Windows we want to use MBCS aware string functions and mimic the
 // Unix glob functionality. On Unix we just use glob.
 #ifdef _WIN32
+# define WIN32_LEAN_AND_MEAN
+# include <windows.h>
+# define _MBCS
 # include <mbstring.h>
+# include <stdint.h>
 # define sg_strchr          ::_mbschr
 # define sg_strrchr         ::_mbsrchr
 # define sg_strlen          ::_mbslen
@@ -301,7 +305,9 @@ enum SG_FileType {
 # define INVALID_FILE_ATTRIBUTES    ((DWORD)-1)
 #endif
 
-#define SG_PATH_CHAR    '\\'
+#ifndef SG_PATH_CHAR
+# define SG_PATH_CHAR    '\\'
+#endif
 
 /*! @brief Windows glob implementation. */
 template<class SOCHAR>
@@ -386,7 +392,9 @@ private:
 
 #else // !_WIN32
 
-#define SG_PATH_CHAR    '/'
+#ifndef SG_PATH_CHAR
+# define SG_PATH_CHAR    '/'
+#endif
 
 /*! @brief Unix glob implementation. */
 template<class SOCHAR>
