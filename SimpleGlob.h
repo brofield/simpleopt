@@ -150,7 +150,7 @@ enum SG_Error {
 // Platform dependent implementations
 
 // if we aren't on Windows and we have ICU available, then enable ICU
-// by default. Define this to 0 to intentially disable it.
+// by default. Define this to 0 to intentionally disable it.
 #ifndef SG_HAVE_ICU
 # if !defined(_WIN32) && defined(USTRING_H)
 #   define SG_HAVE_ICU 1
@@ -375,8 +375,13 @@ struct SimpleGlobBase
 
 private:
     HANDLE              m_hFind;
+#if (__cplusplus >= 201103L) || (_MSVC_LANG >= 201402L)
+    WIN32_FIND_DATAA    m_oFindDataA{};
+    WIN32_FIND_DATAW    m_oFindDataW{};
+#else
     WIN32_FIND_DATAA    m_oFindDataA;
     WIN32_FIND_DATAW    m_oFindDataW;
+#endif
 };
 
 #else // !_WIN32
